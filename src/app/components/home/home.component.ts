@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MeasureService } from '../../services/measure.service';
 import { Measure } from '../../models/measure';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NewmeasureComponent } from '../newmeasure/newmeasure.component';
 
 @Component({
   selector: 'app-home',
@@ -10,12 +12,23 @@ import { Measure } from '../../models/measure';
 export class HomeComponent implements OnInit {
   measures: Measure[] = []
 
-  constructor(public measureService: MeasureService) { }
+  constructor(public measureService: MeasureService,
+              private modalService: NgbModal) { }
 
   ngOnInit() {
     this.measureService.getAll().subscribe(measures => {
       this.measures = measures;
     })
+  }
+
+  newMeasure() {
+    this.modalService.open(NewmeasureComponent).result.then((measure) => {
+      if(measure != undefined) {
+        this.measures.push(measure)
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
   }
 
 }
