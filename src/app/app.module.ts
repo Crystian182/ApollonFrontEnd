@@ -6,9 +6,9 @@ import { HomeComponent } from './components/home/home.component';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AgmCoreModule } from '@agm/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { NgbModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NewmeasureComponent } from './components/newmeasure/newmeasure.component';
 
@@ -24,6 +24,7 @@ import { NewmeasureComponent } from './components/newmeasure/newmeasure.componen
     CommonModule,
     HttpClientModule,
     HttpModule,
+    NgbModalModule,
     NgbModule.forRoot(),
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDeqBKjtOUNXR_H33V1oWKYSWWjsGA3J-E',
