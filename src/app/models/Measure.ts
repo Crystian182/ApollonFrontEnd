@@ -1,4 +1,6 @@
 export interface Measure{ 
-    title: String;
-    text: String;
+    value: Number,
+    lat: Number,
+    lng: Number,
+    date: Date
 }

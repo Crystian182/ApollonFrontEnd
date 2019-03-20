@@ -5,14 +5,18 @@
       <table class="table table-hover dt-responsive">                                       
         <thead>
             <tr>
-              <th style="text-align:center;">Titolo</th>
-              <th style="text-align:center">Testo</th>
+              <th style="text-align:center;">Valore</th>
+              <th style="text-align:center">Latitudine</th>
+              <th style="text-align:center">Longitudine</th>
+              <th style="text-align:center">Data</th>
             </tr> 
         </thead>
         <tbody>                                                                                         
           <tr *ngFor="let m of measures" > 
-            <td style="text-align:center"> {{ m.title }} </td>
-            <td style="text-align:center"> {{ m.text }} </td>
+            <td style="text-align:center"> {{ m.value }} </td>
+            <td style="text-align:center"> {{ m.lat }} </td>
+            <td style="text-align:center"> {{ m.lng }} </td>
+            <td style="text-align:center"> {{ m.date }} </td>
           </tr>
         </tbody>
       </table>
