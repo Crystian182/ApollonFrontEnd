@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -8,6 +7,9 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AgmCoreModule } from '@agm/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+
 import { NewmeasureComponent } from './components/newmeasure/newmeasure.component';
 
 @NgModule({
@@ -23,6 +25,13 @@ import { NewmeasureComponent } from './components/newmeasure/newmeasure.componen
     HttpClientModule,
     HttpModule,
     NgbModule.forRoot(),
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDeqBKjtOUNXR_H33V1oWKYSWWjsGA3J-E',
+      language: 'it',
+      libraries: ['geometry', 'places']
+    }),
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent],
