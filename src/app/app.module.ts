@@ -7,7 +7,7 @@ import { HomeComponent } from './components/home/home.component';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { NewmeasureComponent } from './components/newmeasure/newmeasure.component';
 
 @NgModule({
@@ -22,6 +22,7 @@ import { NewmeasureComponent } from './components/newmeasure/newmeasure.componen
     CommonModule,
     HttpClientModule,
     HttpModule,
+    NgbModalModule,
     NgbModule.forRoot(),
   ],
   providers: [],

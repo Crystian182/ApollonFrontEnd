@@ -31,4 +31,9 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  deleteMeasure() {
+    console.log("ciao")
+
+}
+
 }

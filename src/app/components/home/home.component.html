@@ -7,18 +7,22 @@
       <table *ngIf="measures.length > 0" class="table table-hover dt-responsive">                                       
         <thead>
             <tr>
-              <th style="text-align:center;">Valore</th>
+              <th style="text-align:center;">N°</th>
+              <th style="text-align:center;">Valore [V/m]</th>
               <th style="text-align:center">Latitudine</th>
               <th style="text-align:center">Longitudine</th>
               <th style="text-align:center">Data</th>
+              <th style="text-align:center"></th>
             </tr> 
         </thead>
         <tbody>                                                                                         
-          <tr *ngFor="let m of measures" > 
+          <tr *ngFor="let m of measures; let i = index" >
+            <td style="text-align:center"> {{ i+1 }} </td>
             <td style="text-align:center"> {{ m.value }} </td>
             <td style="text-align:center"> {{ m.lat }} </td>
             <td style="text-align:center"> {{ m.lng }} </td>
-            <td style="text-align:center"> {{ m.date }} </td>
+            <td style="text-align:center"> {{ m.date | date: 'dd/MM/yyyy HH:mm:ss' }} </td>
+            <td><button type="button" class="close" data-toggle="modal" data-target="#modal" style="color: red;"><span aria-hidden="true">&times;</span></button></td>
           </tr>
         </tbody>
       </table>
@@ -28,4 +32,26 @@
     </div>
   </div>
 </body>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal" aria-labelledby="modal" aria-hidden="true" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Conferma</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Vuoi eliminare la misura?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="deleteMeasure(m)">Sì</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
