@@ -1,4 +1,4 @@
-export interface Measure{ 
+export interface Measure { 
     id?: Number;
     value?: Number,
     lat?: Number,

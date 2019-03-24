@@ -7,16 +7,19 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { AgmCoreModule } from '@agm/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { NewmeasureComponent } from './components/newmeasure/newmeasure.component';
+import { CrudComponent } from './components/crud/crud.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    NewmeasureComponent
+    NewmeasureComponent,
+    CrudComponent
   ],
   imports: [
     BrowserModule,
@@ -24,15 +27,16 @@ import { NewmeasureComponent } from './components/newmeasure/newmeasure.componen
     CommonModule,
     HttpClientModule,
     HttpModule,
-    NgbModalModule,
     NgbModule.forRoot(),
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDeqBKjtOUNXR_H33V1oWKYSWWjsGA3J-E',
       language: 'it',
       libraries: ['geometry', 'places']
     }),
+    NgbModalModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent],

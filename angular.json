@@ -26,7 +26,8 @@
               "src/styles.css",
               "./node_modules/bootstrap/dist/css/bootstrap.css"
             ],
-            "scripts": [],
+            "scripts": ["./node_modules/jquery/dist/jquery.js",
+             "./node_modules/bootstrap/dist/js/bootstrap.js"],
             "es5BrowserSupport": true
           },
           "configurations": {
@@ -81,8 +82,7 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
-              "src/styles.css",
-              "./node_modules/bootstrap/dist/css/bootstrap.css"
+              "src/styles.css"
             ],
             "scripts": [],
             "assets": [
