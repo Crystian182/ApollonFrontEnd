@@ -18,4 +18,8 @@ export class PersonaService {
   getAll(): Observable<Persona[]>{
     return this.http.get<Persona[]>(this.personaUrl);
   }
+
+  delete(idpersona: number): Observable<Persona>{
+    return this.http.delete<Persona>(this.personaUrl + '/' + idpersona);
+  }
 }
