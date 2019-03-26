@@ -18,4 +18,13 @@ export class RecapitoService {
   getAll(): Observable<Recapito[]>{
     return this.http.get<Recapito[]>(this.recapitoUrl);
   }
+
+  delete(idrecapito: number): Observable<Recapito>{
+    return this.http.delete<Recapito>(this.recapitoUrl + '/' + idrecapito);
+  }
+
+  getByIdPersona(idpersona: Number): Observable<Recapito[]>{
+    return this.http.get<Recapito[]>(this.recapitoUrl + '/getbyidpersona/' + idpersona);
+  }
+
 }

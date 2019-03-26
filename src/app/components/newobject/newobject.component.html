@@ -7,48 +7,73 @@
   <div class="modal-body" style="padding:0"> 
     <div style="line-height:50%;"><br></div>                                   
     <div class="col-lg-12">
-      <form *ngIf="type=='Persona'">		
+
+      <form *ngIf="type=='Persona'" ngNativeValidate>		
         <div class="form-group">
 
           <div style="line-height:50%;"><br></div>
-          <label class="control-label">Nome</label>
-          <div class="input-group">
-            <input type="text" class="form-control" name="name" id="name_input" placeholder="Inserisci il nome della persona" #name>
-          </div>
-
-          <div style="line-height:50%;"><br></div>
-          <label class="control-label">Cognome</label>
-          <div class="input-group">
-            <input type="text" class="form-control" name="surname" id="surname_input" placeholder="Inserisci il cognome della persona" #surname>
-          </div>
-
-          <div style="line-height:50%;"><br></div>
-          <label class="control-label">Data di Nascita</label>
-          <div class="input-group">
-            <input type="date" class="form-control" name="dob" id="dob_input" placeholder="Inserisci la data di nascita della persona" #dob>
-          </div>
-
-          <div *ngFor="let r of rows; let i = index">
-            <div style="line-height:50%;"><br></div>
-            <label class="control-label">Recapito telefonico {{ i+1 }}</label>
+          <div class="card card-body mb-3" style="border-color: lightgrey;" >
+            <label class="control-label">Nome</label>
             <div class="input-group">
-              <input type="number" class="form-control" name="phone" id="phone_input" placeholder="Inserisci il recapito" #phone>
+              <input type="text" class="form-control" name="name" id="name_input" placeholder="Inserisci il nome della persona" value="{{editpersona?.nome}}" required #name>
+            </div>
+
+            <div style="line-height:50%;"><br></div>
+            <label class="control-label">Cognome</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="surname" id="surname_input" placeholder="Inserisci il cognome della persona" value="{{editpersona?.cognome}}" required #surname>
+            </div>
+
+            <div style="line-height:50%;"><br></div>
+            <label class="control-label">Data di Nascita</label>
+            <div class="input-group">
+              <input type="date" class="form-control" name="dob" id="dob_input" value="{{editpersona?.data_nascita}}" required #dob>
             </div>
           </div>
-          <div class="form-row" style="display: block; text-align: right; margin: 1%">
-            <div style="line-height:30%;"><br></div>
-            <fa (click)="addrow()" name="plus-circle fa-2x" style="color: #218838"></fa>
+          <div style="line-height:50%;"><br></div>
+
+          <div *ngIf="!editpersona" class="card card-body mb-3" style="border-color: lightgrey;" >
+            <div *ngFor="let r of rows; let i = index">
+              <div *ngIf="i != 0" style="line-height:50%;"><br></div>
+              <label class="control-label">Recapito telefonico {{ i+1 }}</label>
+              <div class="input-group">
+                <input (change)="updateRecapiti(phone.value, i)" type="number" class="form-control" name="phone" id="phone_input" placeholder="Inserisci il recapito" #phone>
+              </div>
+            </div>
+            <div class="form-row" style="display: block; text-align: right; margin: 1%">
+              <div style="line-height:30%;"><br></div>
+              <fa (click)="addrow()" name="plus-circle fa-2x" style="color: #218838"></fa>
+            </div>
+          </div>
+
+          <div *ngIf="editpersona" class="card card-body mb-3" style="border-color: lightgrey;" >
+            <div *ngIf="recapitiPersona.length == 0">
+              Nessun recapito
+            </div>
+            <div *ngFor="let r of recapitiPersona; let i = index">
+              <div *ngIf="i != 0" style="line-height:50%;"><br></div>
+              <label class="control-label">Recapito telefonico {{ i+1 }}</label>
+              <div class="input-group">
+                <button (click)="deleteRecapito(r, i)" type="button" class="close" style="color: red;"><span aria-hidden="true">&times;</span></button>&nbsp;<input (change)="updateRecapitiPersona(phone.value, i)" type="number" class="form-control" name="phone" id="phone_input" value="{{r?.numero}}" #phone>
+              </div>
+            </div>
+            <div class="form-row" style="display: block; text-align: right; margin: 1%">
+              <div style="line-height:30%;"><br></div>
+              <fa (click)="addrow()" name="plus-circle fa-2x" style="color: #218838"></fa>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div align="right" id="div_footer" class="col-md-12">                        
+              <button (click)="closeModal()" id="close_modal" class="btn btn-danger" style="height:40px;width:70px">Chiudi</button>
+          </div>
+          <div align="left">                        
+                  <button style="float: right;" id="save_modal" (click)="saveEditPersona(name.value, surname.value, dob.value)" class="btn btn-success" style="height:40px;width:70px">Salva</button>                            
           </div>
         </div>
       </form>
+
     </div>                                                                                                          
   </div>
-  <div class="modal-footer">
-    <div align="right" id="div_footer" class="col-md-12">                        
-        <button (click)="closeModal()" id="close_modal" class="btn btn-danger" style="height:40px;width:70px">Chiudi</button>
-    </div>
-    <div align="left">                        
-            <button style="float: right;" id="save_modal" (click)="save(measvalue.value)" class="btn btn-success" style="height:40px;width:70px">Salva</button>                            
-    </div>
-  </div>
+  
 </div>

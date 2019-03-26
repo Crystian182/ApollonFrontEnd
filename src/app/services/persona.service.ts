@@ -22,4 +22,13 @@ export class PersonaService {
   delete(idpersona: number): Observable<Persona>{
     return this.http.delete<Persona>(this.personaUrl + '/' + idpersona);
   }
+
+  save(persona: Persona): Observable<Persona>{
+    return this.http.post<Persona>(this.personaUrl, persona, {headers});
+  }
+
+  update(persona: Persona): Observable<Persona>{
+    return this.http.put<Persona>(this.personaUrl, persona, {headers});
+  }
+
 }

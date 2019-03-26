@@ -56,8 +56,31 @@ export class CrudComponent implements OnInit {
         console.log('Errore')
       })
     } else {
-
+      this.recapitoService.delete(this.selectedObject.idrecapito).subscribe(res => {
+        this.updateData();
+      }, err => {
+        console.log('Errore')
+      })
     }
+  }
+
+  editObject(type, object) {
+    if(type == 'Persona') {
+      const modalRef = this.modalService.open(NewobjectComponent)
+      modalRef.componentInstance.type = type
+      modalRef.componentInstance.editpersona = object
+
+      modalRef.result.then((persona) => {
+        if(persona != undefined) {
+          this.updateData();
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
+    }
+    
+
+    
   }
 
   checkType(o) {
@@ -71,9 +94,9 @@ export class CrudComponent implements OnInit {
     const modalRef = this.modalService.open(NewobjectComponent)
     modalRef.componentInstance.type = type
 
-    modalRef.result.then((object) => {
-      if(object != undefined) {
-        
+    modalRef.result.then((result) => {
+      if(result != undefined) {
+        this.updateData()
       }
     }).catch((error) => {
       console.log(error);

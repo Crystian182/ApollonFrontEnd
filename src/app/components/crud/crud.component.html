@@ -71,7 +71,7 @@
                   <td style="text-align:center"> {{ p.nome }} </td>
                   <td style="text-align:center"> {{ p.cognome }} </td>
                   <td style="text-align:center"> {{ p.data_nascita | date: 'dd/MM/yyyy' }} </td>
-                  <td width="5%"><fa name="edit"></fa></td>
+                  <td width="5%"><fa (click)="editObject('Persona', p)" name="edit"></fa></td>
                   <td width="5%"><button (click)="setselected(p)" type="button" class="close" data-toggle="modal" data-target="#modal" style="color: red;"><span aria-hidden="true">&times;</span></button></td> 
                 </tr>
               </tbody>
@@ -93,7 +93,6 @@
                       <th style="text-align:center">Nome</th>
                       <th style="text-align:center">Cognome</th>
                       <th width="5%" style="text-align:center"></th>
-                      <th width="5%" style="text-align:center"></th>
                     </tr> 
                 </thead>
                 <tbody>                                                                                         
@@ -102,14 +101,10 @@
                     <td style="text-align:center"> {{ r.numero }} </td>
                     <td style="text-align:center"> {{ r.persona.nome }} </td>
                     <td style="text-align:center"> {{ r.persona.cognome }} </td>
-                    <td width="5%"><fa name="edit"></fa></td>
                     <td width="5%"><button (click)="setselected(r)" type="button" class="close" data-toggle="modal" data-target="#modal" style="color: red;"><span aria-hidden="true">&times;</span></button></td> 
                   </tr>
                 </tbody>
               </table>
-              <div style="text-align: right">
-                <button type="button" class="btn btn-success" (click)="newObject('Recapito')"><fa name="plus"></fa> Aggiungi</button>
-              </div>
             </div>
         </div>
       </div>
