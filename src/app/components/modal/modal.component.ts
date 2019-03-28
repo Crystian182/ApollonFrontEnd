@@ -18,20 +18,13 @@ import { Misurazione } from '../../models/Misurazione';
 })
 export class ModalComponent implements OnInit {
   @Input() type: String;
-  @Input() editpersona: Persona;
+  @Input() persona: Persona;
+  @Input() centralina: Centralina;
   @Input() centraline: Centralina[];
-  @Input() editcentralina: Centralina;
-  @Input() editmisurazione: Misurazione;
+  @Input() misurazione: Misurazione;
 
   @ViewChild("search") public searchElementRef: ElementRef;
-  public searchControl: FormControl;
-
-  rows : Number[] = [] ;
-  recapiti: Recapito[] = [];
-  persona: Persona;
-  recapitiPersona: Recapito[] = [];
-  centralina: Centralina = {};
-  
+  public searchControl: FormControl;  
 
   constructor(public personaService: PersonaService,
               public recapitoService: RecapitoService,
@@ -42,66 +35,62 @@ export class ModalComponent implements OnInit {
               public ngZone: NgZone) { }
 
   ngOnInit() {
-    if(this.editpersona != undefined) {
-      this.recapitoService.getByIdPersona(this.editpersona.idpersona).subscribe(recs => {
-        this.recapitiPersona = recs;
-      })
-    } else if(this.editcentralina != undefined) {
-      this.centralina = this.editcentralina
-    } else {
-      this.rows.length = 1;
+    if(this.type == 'Persona' && this.persona == undefined) {
+      this.persona = {};
+      this.persona.recapiti = [];
+    }
+
+    if(this.type == 'Misurazione' && this.misurazione == undefined) {
+      this.misurazione = {};
+      this.misurazione.centralina = {};
     }
 
     if(this.type == 'Centralina') {
-
-      if(this.editcentralina == undefined) {
-      if (window.navigator && window.navigator.geolocation) {
-        window.navigator.geolocation.getCurrentPosition(position => {
-          this.centralina.lat=position.coords.latitude;
-          this.centralina.lng=position.coords.longitude;
-        },
-          error => {
-              console.log(error)
-          }
-        );
-      }
-    }
-      //create search FormControl
-    this.searchControl = new FormControl();
-
-    //load Places Autocomplete
-    this.mapsAPILoader.load().then(() => {   
-      try {
-        let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
-          types: ["establishment"]
-        });
-    
-        autocomplete.addListener("place_changed", () => {
-          this.ngZone.run(() => {
-            //get the place result
-            let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-
-            //verify result
-            if (place.geometry === undefined || place.geometry === null) {
-              return;
+      if(this.centralina == undefined) {
+        this.centralina = {};
+        if (window.navigator && window.navigator.geolocation) {
+          window.navigator.geolocation.getCurrentPosition(position => {
+            this.centralina.lat=position.coords.latitude;
+            this.centralina.lng=position.coords.longitude;
+          },
+            error => {
+                console.log(error)
             }
-            
-            //set latitude, longitude and zoom
-            this.centralina.lat = place.geometry.location.lat();
-            this.centralina.lng = place.geometry.location.lng();
-          });
-        });
-      autocomplete.setComponentRestrictions
-      } catch (e) {
-        console.log(e)
+          );
+        }
       }
-    });
+
+      //Google Maps
+      this.searchControl = new FormControl();
+      //load Places Autocomplete
+      this.mapsAPILoader.load().then(() => {   
+        try {
+          let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
+            types: ["establishment"]
+          });
+          autocomplete.addListener("place_changed", () => {
+            this.ngZone.run(() => {
+              //get the place result
+              let place: google.maps.places.PlaceResult = autocomplete.getPlace();
+              //verify result
+              if (place.geometry === undefined || place.geometry === null) {
+                return;
+              }
+              //set latitude, longitude and zoom
+              this.centralina.lat = place.geometry.location.lat();
+              this.centralina.lng = place.geometry.location.lng();
+            });
+          });
+          autocomplete.setComponentRestrictions
+        } catch (e) {
+          console.log(e)
+        }
+      });
     }
   }
 
   addrow(){
-    this.rows.push(this.rows.length+1);
-    this.recapitiPersona.length++
+    this.persona.recapiti.length++
   }
 
   markerDragEnd($event) {
@@ -111,34 +100,34 @@ export class ModalComponent implements OnInit {
 
   savePersona(name, surname, dob) {
     if(!(name == '' || surname == '' || dob == '')) {
-      this.persona = {nome: name, cognome: surname, data_nascita: dob, recapiti: this.recapiti} as Persona
+      this.persona.nome = name;
+      this.persona.cognome = surname;
+      this.persona.data_nascita = dob;
       this.personaService.save(this.persona).subscribe(res => {
-        this.activeModal.close(res[0]);
+        this.activeModal.close(res);
       })
-      }
     }
-
-  updateRecapiti(phone, i) {
-    this.recapiti[i] = ({numero: phone} as Recapito)
   }
 
   deleteRecapito(recapito, i) {
-    this.recapitiPersona.splice(i, 1)
+    this.persona.recapiti.splice(i, 1)
   }
 
-  updateRecapitiPersona(phone, i) {
-    this.recapitiPersona[i] = ({numero: phone} as Recapito)
+  updateRecapiti(phone, i) {
+    this.persona.recapiti[i] = ({numero: phone} as Recapito)
   }
 
   closeModal(){
     this.activeModal.close();
   }
 
-  saveEditPersona(name, surname, dob){
+  updatePersona(name, surname, dob){
     if(!(name == '' || surname == '' || dob == '')) {
-      this.persona = {idpersona: this.editpersona.idpersona, nome: name, cognome: surname, data_nascita: dob, recapiti: this.recapitiPersona} as Persona
+      this.persona.nome = name;
+      this.persona.cognome = surname;
+      this.persona.data_nascita = dob;
       this.personaService.update(this.persona).subscribe(res => {
-        this.activeModal.close(res[0]);
+        this.activeModal.close(res);
       })
     }
   }
@@ -152,7 +141,7 @@ export class ModalComponent implements OnInit {
     }
   }
 
-  editCentralina(name) {
+  updateCentralina(name) {
     this.centralina.nome = name
     this.centralinaService.update(this.centralina).subscribe(res => {
       this.activeModal.close(res);
@@ -161,17 +150,19 @@ export class ModalComponent implements OnInit {
 
   saveMisurazione(idcentralina, valore) {
     if(idcentralina != '' && valore != '') {
-      this.misurazioneService.saveMisurazione({valore: valore, centralina: {_id: idcentralina}} as Misurazione).subscribe(res => {
+      this.misurazione.valore = valore;
+      this.misurazione.centralina = {_id: idcentralina};
+      this.misurazioneService.saveMisurazione(this.misurazione).subscribe(res => {
         this.activeModal.close(res);
       })
     } 
   }
 
-  editMisurazione(idcentralina, valore) {
+  updateMisurazione(idcentralina, valore) {
     if(idcentralina != '' && valore != '') {
-      this.editmisurazione.valore = valore;
-      this.editmisurazione.centralina = {_id: idcentralina};
-      this.misurazioneService.updateMisurazione(this.editmisurazione).subscribe(res => {
+      this.misurazione.valore = valore;
+      this.misurazione.centralina = {_id: idcentralina};
+      this.misurazioneService.updateMisurazione(this.misurazione).subscribe(res => {
         this.activeModal.close(res);
       })
     } 

@@ -19,7 +19,7 @@ export class PersonaService {
     return this.http.get<Persona[]>(this.personaUrl);
   }
 
-  delete(idpersona: number): Observable<Persona>{
+  delete(idpersona: Number): Observable<Persona>{
     return this.http.delete<Persona>(this.personaUrl + '/' + idpersona);
   }
 

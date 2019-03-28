@@ -9,6 +9,7 @@ import { Centralina } from '../../models/Centralina';
 import { Misurazione } from '../../models/Misurazione';
 import { MisurazioneService } from '../../services/misurazione.service';
 import { ModalComponent } from '../modal/modal.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-crud',
@@ -17,21 +18,27 @@ import { ModalComponent } from '../modal/modal.component';
 })
 export class CrudComponent implements OnInit {
 
+  relational: boolean = true;
+
   persone: Persona[] = [];
   recapiti: Recapito[] = [];
-  relational: boolean = true;
-  selectedObject: any = {};
-  selectedMisurazione: Misurazione;
   centraline: Centralina[] = [];
   misurazioni: Misurazione[] = [];
+  
+  selectedPersona: Persona;
+  selectedRecapito: Recapito;
+  selectedCentralina: Centralina;
+  selectedMisurazione: Misurazione;
 
-  constructor(public personaService: PersonaService,
+  constructor(private titleService: Title,
+              public personaService: PersonaService,
               public recapitoService: RecapitoService,
               public centralinaService: CentralinaService,
               public misurazioneService: MisurazioneService,
               public modalService: NgbModal) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Pagina di CRUD - MySql');
     this.updateData();
   }
 
@@ -56,43 +63,55 @@ export class CrudComponent implements OnInit {
   switchDB() {
     if(this.relational) {
       this.relational = false;
+      this.titleService.setTitle('Pagina di CRUD - MongoDB');
     } else {
       this.relational = true;
+      this.titleService.setTitle('Pagina di CRUD - MySql');
     }
   }
 
-  setselected(o) {
-    this.selectedObject = o;
+  setPersona(p) {
+    this.selectedPersona = p;
   }
 
-  setselectedmisurazione(o) {
-    this.selectedMisurazione = o
+  setRecapito(r) {
+    this.selectedRecapito = r;
+  }
+
+  setCentralina(c) {
+    this.selectedCentralina = c;
+  }
+
+  setMisurazione(m) {
+    this.selectedMisurazione = m;
   }
 
   deleteObject() {
-    if(this.selectedMisurazione != undefined) {
-      this.misurazioneService.delete(this.selectedMisurazione.id).subscribe(res => {
+    if(this.selectedPersona != undefined && this.selectedRecapito == undefined && this.selectedCentralina == undefined && this.selectedMisurazione == undefined) {
+      this.personaService.delete(this.selectedPersona.idpersona).subscribe(res => {
         this.updateData();
-        this.selectedMisurazione = undefined;
+        this.selectedPersona = undefined;
       }, err => {
         console.log(err)
       })
-    }
-    if(this.checkType(this.selectedObject) == "Persona") {
-      this.personaService.delete(this.selectedObject.idpersona).subscribe(res => {
+    } else if(this.selectedRecapito != undefined && this.selectedPersona == undefined && this.selectedCentralina == undefined && this.selectedMisurazione == undefined) {
+      this.recapitoService.delete(this.selectedRecapito.idrecapito).subscribe(res => {
         this.updateData();
+        this.selectedRecapito = undefined;
       }, err => {
-        console.log('Errore')
+        console.log(err)
       })
-    } else if(this.checkType(this.selectedObject) == "Recapito") {
-      this.recapitoService.delete(this.selectedObject.idrecapito).subscribe(res => {
+    } else if(this.selectedCentralina != undefined && this.selectedPersona == undefined && this.selectedRecapito == undefined && this.selectedMisurazione == undefined) {
+      this.centralinaService.delete(this.selectedCentralina._id).subscribe(res => {
         this.updateData();
+        this.selectedCentralina = undefined;
       }, err => {
-        console.log('Errore')
+        console.log(err)
       })
-    } else if(this.checkType(this.selectedObject) == "Centralina") {
-      this.centralinaService.delete(this.selectedObject._id).subscribe(res => {
+    } else if(this.selectedMisurazione != undefined && this.selectedPersona == undefined && this.selectedRecapito == undefined && this.selectedCentralina == undefined) {
+      this.misurazioneService.delete(this.selectedMisurazione._id).subscribe(res => {
         this.updateData();
+        this.selectedMisurazione = undefined;
       }, err => {
         console.log(err)
       })
@@ -100,57 +119,25 @@ export class CrudComponent implements OnInit {
   }
 
   editObject(type, object) {
+    const modalRef = this.modalService.open(ModalComponent)
+    modalRef.componentInstance.type = type
+
     if (type == 'Persona') {
-      const modalRef = this.modalService.open(ModalComponent)
-      modalRef.componentInstance.type = type
-      modalRef.componentInstance.editpersona = object
-
-      modalRef.result.then((persona) => {
-        if(persona != undefined) {
-          this.updateData();
-        }
-      }).catch((error) => {
-        console.log(error);
-      });
+      modalRef.componentInstance.persona = JSON.parse(JSON.stringify(object))
     } else if (type == 'Centralina') {
-      const modalRef = this.modalService.open(ModalComponent)
-      modalRef.componentInstance.type = type
-      modalRef.componentInstance.editcentralina = object
-
-      modalRef.result.then((result) => {
-        if(result != undefined) {
-          this.updateData();
-        }
-      }).catch((error) => {
-        console.log(error);
-      });
+      modalRef.componentInstance.centralina = JSON.parse(JSON.stringify(object))
     } else if (type == 'Misurazione') {
-      const modalRef = this.modalService.open(ModalComponent)
-      modalRef.componentInstance.type = type
-      modalRef.componentInstance.editmisurazione = object
+      modalRef.componentInstance.misurazione = JSON.parse(JSON.stringify(object))
       modalRef.componentInstance.centraline = this.centraline
-
-      modalRef.result.then((result) => {
-        if(result != undefined) {
-          this.updateData();
-        }
-      }).catch((error) => {
-        console.log(error);
-      });
     }
-    
 
-    
-  }
-
-  checkType(o) {
-    if(o.idpersona == undefined && o._id == undefined) {
-      return "Recapito"
-    } else if(o.idrecapito == undefined && o._id == undefined) {
-      return "Persona"
-    } else if(o.idrecapito == undefined && o.idpersona == undefined) {
-      return "Centralina"
-    }
+    modalRef.result.then((result) => {
+      if(result != undefined) {
+        this.updateData();
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
   }
 
   newObject(type) {

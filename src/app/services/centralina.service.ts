@@ -23,7 +23,7 @@ export class CentralinaService {
     return this.http.post<Centralina>(this.centralinaUrl, centralina, {headers});
   }
 
-  delete(idcentralina: number): Observable<Centralina>{
+  delete(idcentralina: Number): Observable<Centralina>{
     return this.http.delete<Centralina>(this.centralinaUrl + '/' + idcentralina);
   }
 

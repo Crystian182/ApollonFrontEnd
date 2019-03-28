@@ -1,61 +1,51 @@
 <div>
   <div style="line-height:50%;"><br></div>
+  <!-- Modal Header -->
   <div class="modal-header" style="padding:0; margin-left: 13px;  margin-right: 13px;">                                                        
-    <h3 *ngIf="type=='Persona'" id="titolo_modal" style="text-align: center;">Nuova persona</h3>    
-    <h3 *ngIf="type=='Centralina'" id="titolo_modal" style="text-align: center;">Nuova centralina</h3> 
-    <h3 *ngIf="type=='Misurazione'" id="titolo_modal" style="text-align: center;">Nuova misurazione</h3>                                                              
+    <h3 *ngIf="type=='Persona' && !persona.idpersona" id="titolo_modal" style="text-align: center;">Nuova persona</h3>    
+    <h3 *ngIf="type=='Persona' && persona.idpersona" id="titolo_modal" style="text-align: center;">Aggiorna persona</h3>    
+    <h3 *ngIf="type=='Centralina' && !centralina._id" id="titolo_modal" style="text-align: center;">Nuova centralina</h3> 
+    <h3 *ngIf="type=='Centralina' && centralina._id" id="titolo_modal" style="text-align: center;">Aggiorna centralina</h3> 
+    <h3 *ngIf="type=='Misurazione' && !misurazione._id" id="titolo_modal" style="text-align: center;">Nuova misurazione</h3>   
+    <h3 *ngIf="type=='Misurazione' && misurazione._id" id="titolo_modal" style="text-align: center;">Aggiorna misurazione</h3>                                                                                                                         
   </div>
+  <!-- Modal Body -->
   <div class="modal-body" style="padding:0"> 
     <div style="line-height:50%;"><br></div>                                   
     <div class="col-lg-12">
 
+      <!-- Persona Form -->
       <form *ngIf="type=='Persona'" ngNativeValidate>		
         <div class="form-group">
-
           <div style="line-height:50%;"><br></div>
+          <!-- Generalità Persona -->
           <div class="card card-body mb-3" style="border-color: lightgrey;" >
             <label class="control-label">Nome</label>
             <div class="input-group">
-              <input type="text" class="form-control" name="name" id="name_input" placeholder="Inserisci il nome della persona" value="{{editpersona?.nome}}" required #name>
+              <input type="text" class="form-control" name="name" id="name_input" placeholder="Inserisci il nome della persona" value="{{persona?.nome}}" required #name>
             </div>
-
             <div style="line-height:50%;"><br></div>
             <label class="control-label">Cognome</label>
             <div class="input-group">
-              <input type="text" class="form-control" name="surname" id="surname_input" placeholder="Inserisci il cognome della persona" value="{{editpersona?.cognome}}" required #surname>
+              <input type="text" class="form-control" name="surname" id="surname_input" placeholder="Inserisci il cognome della persona" value="{{persona?.cognome}}" required #surname>
             </div>
-
             <div style="line-height:50%;"><br></div>
             <label class="control-label">Data di Nascita</label>
             <div class="input-group">
-              <input type="date" class="form-control" name="dob" id="dob_input" value="{{editpersona?.data_nascita}}" required #dob>
+              <input type="date" class="form-control" name="dob" id="dob_input" value="{{persona?.data_nascita}}" required #dob>
             </div>
           </div>
           <div style="line-height:50%;"><br></div>
-
-          <div *ngIf="!editpersona" class="card card-body mb-3" style="border-color: lightgrey;" >
-            <div *ngFor="let r of rows; let i = index">
-              <div *ngIf="i != 0" style="line-height:50%;"><br></div>
-              <label class="control-label">Recapito telefonico {{ i+1 }}</label>
-              <div class="input-group">
-                <input (change)="updateRecapiti(phone.value, i)" type="number" class="form-control" name="phone" id="phone_input" placeholder="Inserisci il recapito" #phone>
-              </div>
-            </div>
-            <div class="form-row" style="display: block; text-align: right; margin: 1%">
-              <div style="line-height:30%;"><br></div>
-              <fa (click)="addrow()" name="plus-circle fa-2x" style="color: #218838"></fa>
-            </div>
-          </div>
-
-          <div *ngIf="editpersona" class="card card-body mb-3" style="border-color: lightgrey;" >
-            <div *ngIf="recapitiPersona.length == 0">
+          <!-- Recapiti Persona -->
+          <div class="card card-body mb-3" style="border-color: lightgrey;" >
+            <div *ngIf="persona?.recapiti?.length == 0">
               Nessun recapito
             </div>
-            <div *ngFor="let r of recapitiPersona; let i = index">
+            <div *ngFor="let r of persona.recapiti; let i = index">
               <div *ngIf="i != 0" style="line-height:50%;"><br></div>
               <label class="control-label">Recapito telefonico {{ i+1 }}</label>
               <div class="input-group">
-                <button (click)="deleteRecapito(r, i)" type="button" class="close" style="color: red;"><span aria-hidden="true">&times;</span></button>&nbsp;<input (change)="updateRecapitiPersona(phone.value, i)" type="number" class="form-control" name="phone" id="phone_input" value="{{r?.numero}}" #phone>
+                <button (click)="deleteRecapito(r, i)" type="button" class="close" style="color: red;"><span aria-hidden="true">&times;</span></button>&nbsp;<input (change)="updateRecapiti(phone.value, i)" type="number" class="form-control" name="phone" id="phone_input" value="{{r?.numero}}" #phone>
               </div>
             </div>
             <div class="form-row" style="display: block; text-align: right; margin: 1%">
@@ -64,39 +54,39 @@
             </div>
           </div>
         </div>
+        <!-- Modal Footer -->
         <div class="modal-footer">
           <div align="right" id="div_footer" class="col-md-12">                        
-              <button (click)="closeModal()" id="close_modal" class="btn btn-danger" style="height:40px;width:70px">Chiudi</button>
+            <button (click)="closeModal()" id="close_modal" class="btn btn-danger" style="height:40px;width:70px">Chiudi</button>
           </div>
           <div align="left">                        
-                  <button *ngIf="editpersona" style="float: right;" id="save_modal" (click)="saveEditPersona(name.value, surname.value, dob.value)" class="btn btn-success" style="height:40px;width:70px">Salva</button>  
-                  <button *ngIf="!editpersona" style="float: right;" id="save_modal" (click)="savePersona(name.value, surname.value, dob.value)" class="btn btn-success" style="height:40px;width:70px">Salva</button>                                                      
+            <button *ngIf="persona.idpersona" style="float: right;" id="save_modal" (click)="updatePersona(name.value, surname.value, dob.value)" class="btn btn-success" style="height:40px;width:90px">Modifica</button>  
+            <button *ngIf="!persona.idpersona" style="float: right;" id="save_modal" (click)="savePersona(name.value, surname.value, dob.value)" class="btn btn-success" style="height:40px;width:70px">Salva</button>                                                      
           </div>
         </div>
       </form>
 
+      <!-- Centralina Form -->
       <form *ngIf="type=='Centralina'" ngNativeValidate>		
         <div class="form-group">
           <div class="card card-body mb-3" style="border-color: lightgrey;" >
-
+            <!-- Mappa Google -->
             <input class="form-control" placeholder="Cerca" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #search [formControl]="searchControl">
             <div style="line-height:50%;"><br></div>
             <agm-map [latitude]="centralina?.lat" [longitude]="centralina?.lng" [zoom]="18" [mapTypeId]="'hybrid'">
               <agm-marker [markerDraggable]="true" [latitude]="centralina?.lat" [longitude]="centralina?.lng" (dragEnd)="markerDragEnd($event)"></agm-marker>
             </agm-map>
             <div style="line-height:50%;"><br></div>  
-
+            <!-- Generalità Centralina -->
             <label class="control-label">Nome</label>
             <div class="input-group">
-              <input type="text" class="form-control" name="name" id="name_input" placeholder="Inserisci il nome della centralina" value="{{editcentralina?.nome}}" required #name>
+              <input type="text" class="form-control" name="name" id="name_input" placeholder="Inserisci il nome della centralina" value="{{centralina?.nome}}" required #name>
             </div>
-
             <div style="line-height:50%;"><br></div>
             <label class="control-label">Latitudine</label>
             <div class="input-group">
               <input type="text" class="form-control" name="surname" id="surname_input" value="{{centralina?.lat}}" disabled #lat>
             </div>
-
             <div style="line-height:50%;"><br></div>
             <label class="control-label">Longitudine</label>
             <div class="input-group">
@@ -104,50 +94,48 @@
             </div>
           </div>
           <div style="line-height:50%;"><br></div>
-
         </div>
+        <!-- Modal Footer -->
         <div class="modal-footer">
           <div align="right" id="div_footer" class="col-md-12">                        
               <button (click)="closeModal()" id="close_modal" class="btn btn-danger" style="height:40px;width:70px">Chiudi</button>
           </div>
           <div align="left">                        
-                  <button *ngIf="!editcentralina" style="float: right;" id="save_modal" (click)="saveCentralina(name.value)" class="btn btn-success" style="height:40px;width:70px">Salva</button>                  
-                  <button *ngIf="editcentralina" style="float: right;" id="save_modal" (click)="editCentralina(name.value)" class="btn btn-success" style="height:40px;width:70px">Salva</button>                                                                                    
+            <button *ngIf="!centralina._id" style="float: right;" id="save_modal" (click)="saveCentralina(name.value)" class="btn btn-success" style="height:40px;width:70px">Salva</button>                  
+            <button *ngIf="centralina._id" style="float: right;" id="save_modal" (click)="updateCentralina(name.value)" class="btn btn-success" style="height:40px;width:90px">Modifica</button>                                                                                    
           </div>
         </div>
       </form>
 
+      <!-- Misurazione Form -->
       <form *ngIf="type=='Misurazione'" ngNativeValidate>		
-          <div class="form-group">
-            <div class="card card-body mb-3" style="border-color: lightgrey;" >
-              <div style="line-height:50%;"><br></div>  
-
-              <select class="custom-select mr-sm-2" name="course" required #idcentralina>
-                  <option value="">Seleziona la centralina</option>
-                  <option *ngFor="let c of centraline; let i = index" [value]="c._id" [selected]="c._id==editmisurazione?.centralina._id">{{ c.nome }}</option>
-                </select>
-              <div style="line-height:50%;"><br></div>  
-              <label class="control-label">Valore misura [V/m]</label>
-              <div class="input-group">
-                <input type="number" step="0.001" class="form-control" name="measure_input" id="meas_input" value="{{editmisurazione?.valore}}" placeholder="Inserisci il valore della misura" required #meas>
-              </div>
-  
-            </div>
-            <div style="line-height:50%;"><br></div>
-  
-          </div>
-          <div class="modal-footer">
-            <div align="right" id="div_footer" class="col-md-12">                        
-                <button (click)="closeModal()" id="close_modal" class="btn btn-danger" style="height:40px;width:70px">Chiudi</button>
-            </div>
-            <div align="left">                        
-                    <button *ngIf="!editmisurazione" style="float: right;" id="save_modal" (click)="saveMisurazione(idcentralina.value, meas.value)" class="btn btn-success" style="height:40px;width:70px">Salva</button>                   
-                    <button *ngIf="editmisurazione" style="float: right;" id="save_modal" (click)="editMisurazione(idcentralina.value, meas.value)" class="btn btn-success" style="height:40px;width:70px">Salva</button>                                                                                   
+        <div class="form-group">
+          <div class="card card-body mb-3" style="border-color: lightgrey;" >
+            <div style="line-height:50%;"><br></div>  
+            <select class="custom-select mr-sm-2" name="centralina" required #idcentralina>
+              <option value="">Seleziona la centralina</option>
+              <option *ngFor="let c of centraline;" [value]="c._id" [selected]="c._id==misurazione?.centralina._id">{{ c.nome }}</option>
+            </select>
+            <div style="line-height:50%;"><br></div>  
+            <label class="control-label">Valore misura [V/m]</label>
+            <div class="input-group">
+              <input type="number" step="0.001" class="form-control" name="measure_input" id="meas_input" value="{{misurazione?.valore}}" placeholder="Inserisci il valore della misura" required #meas>
             </div>
           </div>
-        </form>
+          <div style="line-height:50%;"><br></div>
+        </div>
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+          <div align="right" id="div_footer" class="col-md-12">                        
+            <button (click)="closeModal()" id="close_modal" class="btn btn-danger" style="height:40px;width:70px">Chiudi</button>
+          </div>
+          <div align="left">                        
+            <button *ngIf="!misurazione._id" style="float: right;" id="save_modal" (click)="saveMisurazione(idcentralina.value, meas.value)" class="btn btn-success" style="height:40px;width:70px">Salva</button>                   
+            <button *ngIf="misurazione._id" style="float: right;" id="save_modal" (click)="updateMisurazione(idcentralina.value, meas.value)" class="btn btn-success" style="height:40px;width:90px">Modifica</button>                                                                                   
+          </div>
+        </div>
+      </form>
 
     </div>                                                                                                          
   </div>
-  
 </div>
