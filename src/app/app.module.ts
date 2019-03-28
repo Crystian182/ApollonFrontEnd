@@ -14,7 +14,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 //import { NewmeasureComponent } from './components/newmeasure/newmeasure.component';
 import { CrudComponent } from './components/crud/crud.component';
-import { NewobjectComponent } from './components/newobject/newobject.component';
+import { ModalComponent } from './components/modal/modal.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +22,7 @@ import { NewobjectComponent } from './components/newobject/newobject.component';
     HomeComponent,
     //NewmeasureComponent,
     CrudComponent,
-    NewobjectComponent
+    ModalComponent
   ],
   imports: [
     BrowserModule,
@@ -45,8 +45,7 @@ import { NewobjectComponent } from './components/newobject/newobject.component';
   providers: [],
   bootstrap: [AppComponent],
   entryComponents: [
-    //NewmeasureComponent,
-    NewobjectComponent
+    ModalComponent
   ]
 })
 export class AppModule { }

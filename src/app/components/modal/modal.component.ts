@@ -12,11 +12,11 @@ import { MisurazioneService } from '../../services/misurazione.service';
 import { Misurazione } from '../../models/Misurazione';
 
 @Component({
-  selector: 'app-newobject',
-  templateUrl: './newobject.component.html',
-  styleUrls: ['./newobject.component.css']
+  selector: 'app-modal',
+  templateUrl: './modal.component.html',
+  styleUrls: ['./modal.component.css']
 })
-export class NewobjectComponent implements OnInit {
+export class ModalComponent implements OnInit {
   @Input() type: String;
   @Input() editpersona: Persona;
   @Input() centraline: Centralina[];

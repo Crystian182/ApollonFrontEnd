@@ -4,11 +4,11 @@ import { RecapitoService } from '../../services/recapito.service';
 import { Persona } from '../../models/Persona';
 import { Recapito } from '../../models/Recapito';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NewobjectComponent } from '../newobject/newobject.component';
 import { CentralinaService } from '../../services/centralina.service';
 import { Centralina } from '../../models/Centralina';
 import { Misurazione } from '../../models/Misurazione';
 import { MisurazioneService } from '../../services/misurazione.service';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-crud',
@@ -101,7 +101,7 @@ export class CrudComponent implements OnInit {
 
   editObject(type, object) {
     if (type == 'Persona') {
-      const modalRef = this.modalService.open(NewobjectComponent)
+      const modalRef = this.modalService.open(ModalComponent)
       modalRef.componentInstance.type = type
       modalRef.componentInstance.editpersona = object
 
@@ -113,7 +113,7 @@ export class CrudComponent implements OnInit {
         console.log(error);
       });
     } else if (type == 'Centralina') {
-      const modalRef = this.modalService.open(NewobjectComponent)
+      const modalRef = this.modalService.open(ModalComponent)
       modalRef.componentInstance.type = type
       modalRef.componentInstance.editcentralina = object
 
@@ -125,7 +125,7 @@ export class CrudComponent implements OnInit {
         console.log(error);
       });
     } else if (type == 'Misurazione') {
-      const modalRef = this.modalService.open(NewobjectComponent)
+      const modalRef = this.modalService.open(ModalComponent)
       modalRef.componentInstance.type = type
       modalRef.componentInstance.editmisurazione = object
       modalRef.componentInstance.centraline = this.centraline
@@ -154,7 +154,7 @@ export class CrudComponent implements OnInit {
   }
 
   newObject(type) {
-    const modalRef = this.modalService.open(NewobjectComponent)
+    const modalRef = this.modalService.open(ModalComponent)
     modalRef.componentInstance.type = type
 
     if(type == 'Misurazione') {
