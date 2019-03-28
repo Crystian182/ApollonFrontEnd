@@ -16,6 +16,7 @@
         <div class="modal-body">
           <p *ngIf="checkType(selectedObject) == 'Persona'">Vuoi eliminare la persona?</p>
           <p *ngIf="checkType(selectedObject) == 'Recapito'">Vuoi eliminare il recapito?</p>
+          <p *ngIf="checkType(selectedObject) == 'Centralina'">Vuoi eliminare la centralina?</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" (click)="deleteObject()" data-dismiss="modal">Sì</button>
@@ -108,8 +109,70 @@
             </div>
         </div>
       </div>
+
       <div class="row" *ngIf="!relational">
-        MONGODB works!
+        <div class="col-md 6">
+          <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa;" >
+            <h3>Centraline</h3>
+            <div *ngIf="centraline.length == 0">Non ci sono centraline in memoria.</div>
+            <table *ngIf="centraline.length > 0" class="table table-hover dt-responsive">                                       
+              <thead>
+                  <tr>
+                    <th style="text-align:center;">N°</th>
+                    <th style="text-align:center;">Nome</th>
+                    <th style="text-align:center">Lat</th>
+                    <th style="text-align:center">Lng</th>
+                    <th width="5%" style="text-align:center"></th>
+                    <th width="5%" style="text-align:center"></th>
+                  </tr> 
+              </thead>
+              <tbody>                                                                                         
+                <tr *ngFor="let c of centraline; let i = index" >
+                  <td style="text-align:center"> {{ i+1 }} </td>
+                  <td style="text-align:center"> {{ c.nome }} </td>
+                  <td style="text-align:center"> {{ c.lat }} </td>
+                  <td style="text-align:center"> {{ c.lng }} </td>
+                  <td width="5%"><fa (click)="editObject('Centralina', c)" name="edit"></fa></td>
+                  <td width="5%"><button (click)="setselected(c)" type="button" class="close" data-toggle="modal" data-target="#modal" style="color: red;"><span aria-hidden="true">&times;</span></button></td> 
+                </tr>
+              </tbody>
+            </table>
+            <div style="text-align: right">
+              <button type="button" class="btn btn-success" (click)="newObject('Centralina')"><fa name="plus"></fa> Aggiungi</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md 6">
+            <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa;" >
+              <h3>Misurazioni</h3>
+              <div *ngIf="misurazioni.length == 0">Non ci sono misurazioni in memoria.</div>
+              <table *ngIf="misurazioni.length > 0" class="table table-hover dt-responsive">                                       
+                <thead>
+                    <tr>
+                      <th style="text-align:center;">N°</th>
+                      <th style="text-align:center;">Valore</th>
+                      <th style="text-align:center">Data</th>
+                      <th style="text-align:center">Centralina</th>
+                      <th width="5%" style="text-align:center"></th>
+                      <th width="5%" style="text-align:center"></th>
+                    </tr> 
+                </thead>
+                <tbody>                                                                                         
+                  <tr *ngFor="let m of misurazioni; let i = index" >
+                    <td style="text-align:center"> {{ i+1 }} </td>
+                    <td style="text-align:center"> {{ m.valore }} </td>
+                    <td style="text-align:center"> {{ m.data | date: 'dd/MM/yyyy HH:mm'}} </td>
+                    <td style="text-align:center"> {{ m.centralina.nome }} </td>
+                    <td width="5%"><fa (click)="editObject('Misurazione', m)" name="edit"></fa></td>
+                    <td width="5%"><button (click)="setselectedmisurazione(m)" type="button" class="close" data-toggle="modal" data-target="#modal" style="color: red;"><span aria-hidden="true">&times;</span></button></td> 
+                  </tr>
+                </tbody>
+              </table>
+              <div style="text-align: right">
+                <button type="button" class="btn btn-success" (click)="newObject('Misurazione')"><fa name="plus"></fa> Aggiungi</button>
+              </div>
+            </div>
+        </div>
       </div>
       <div style="line-height:100%;"><br></div>
     </div>

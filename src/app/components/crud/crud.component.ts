@@ -5,6 +5,10 @@ import { Persona } from '../../models/Persona';
 import { Recapito } from '../../models/Recapito';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NewobjectComponent } from '../newobject/newobject.component';
+import { CentralinaService } from '../../services/centralina.service';
+import { Centralina } from '../../models/Centralina';
+import { Misurazione } from '../../models/Misurazione';
+import { MisurazioneService } from '../../services/misurazione.service';
 
 @Component({
   selector: 'app-crud',
@@ -17,9 +21,14 @@ export class CrudComponent implements OnInit {
   recapiti: Recapito[] = [];
   relational: boolean = true;
   selectedObject: any = {};
+  selectedMisurazione: Misurazione;
+  centraline: Centralina[] = [];
+  misurazioni: Misurazione[] = [];
 
   constructor(public personaService: PersonaService,
               public recapitoService: RecapitoService,
+              public centralinaService: CentralinaService,
+              public misurazioneService: MisurazioneService,
               public modalService: NgbModal) { }
 
   ngOnInit() {
@@ -33,6 +42,14 @@ export class CrudComponent implements OnInit {
 
     this.recapitoService.getAll().subscribe(recapiti => {
       this.recapiti = recapiti
+    })
+
+    this.centralinaService.getAll().subscribe(centraline => {
+      this.centraline = centraline
+    })
+
+    this.misurazioneService.getAll().subscribe(misurazioni => {
+      this.misurazioni = misurazioni
     })
   }
 
@@ -48,30 +65,73 @@ export class CrudComponent implements OnInit {
     this.selectedObject = o;
   }
 
+  setselectedmisurazione(o) {
+    this.selectedMisurazione = o
+  }
+
   deleteObject() {
+    if(this.selectedMisurazione != undefined) {
+      this.misurazioneService.delete(this.selectedMisurazione.id).subscribe(res => {
+        this.updateData();
+        this.selectedMisurazione = undefined;
+      }, err => {
+        console.log(err)
+      })
+    }
     if(this.checkType(this.selectedObject) == "Persona") {
       this.personaService.delete(this.selectedObject.idpersona).subscribe(res => {
         this.updateData();
       }, err => {
         console.log('Errore')
       })
-    } else {
+    } else if(this.checkType(this.selectedObject) == "Recapito") {
       this.recapitoService.delete(this.selectedObject.idrecapito).subscribe(res => {
         this.updateData();
       }, err => {
         console.log('Errore')
       })
+    } else if(this.checkType(this.selectedObject) == "Centralina") {
+      this.centralinaService.delete(this.selectedObject._id).subscribe(res => {
+        this.updateData();
+      }, err => {
+        console.log(err)
+      })
     }
   }
 
   editObject(type, object) {
-    if(type == 'Persona') {
+    if (type == 'Persona') {
       const modalRef = this.modalService.open(NewobjectComponent)
       modalRef.componentInstance.type = type
       modalRef.componentInstance.editpersona = object
 
       modalRef.result.then((persona) => {
         if(persona != undefined) {
+          this.updateData();
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
+    } else if (type == 'Centralina') {
+      const modalRef = this.modalService.open(NewobjectComponent)
+      modalRef.componentInstance.type = type
+      modalRef.componentInstance.editcentralina = object
+
+      modalRef.result.then((result) => {
+        if(result != undefined) {
+          this.updateData();
+        }
+      }).catch((error) => {
+        console.log(error);
+      });
+    } else if (type == 'Misurazione') {
+      const modalRef = this.modalService.open(NewobjectComponent)
+      modalRef.componentInstance.type = type
+      modalRef.componentInstance.editmisurazione = object
+      modalRef.componentInstance.centraline = this.centraline
+
+      modalRef.result.then((result) => {
+        if(result != undefined) {
           this.updateData();
         }
       }).catch((error) => {
@@ -84,15 +144,22 @@ export class CrudComponent implements OnInit {
   }
 
   checkType(o) {
-    if(o.idpersona == undefined) {
+    if(o.idpersona == undefined && o._id == undefined) {
       return "Recapito"
+    } else if(o.idrecapito == undefined && o._id == undefined) {
+      return "Persona"
+    } else if(o.idrecapito == undefined && o.idpersona == undefined) {
+      return "Centralina"
     }
-    return "Persona"
   }
 
   newObject(type) {
     const modalRef = this.modalService.open(NewobjectComponent)
     modalRef.componentInstance.type = type
+
+    if(type == 'Misurazione') {
+      modalRef.componentInstance.centraline = this.centraline
+    }
 
     modalRef.result.then((result) => {
       if(result != undefined) {

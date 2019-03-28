@@ -1,7 +1,7 @@
-import { Component, OnInit, ElementRef, NgZone, ViewChild } from '@angular/core';
+/*import { Component, OnInit, ElementRef, NgZone, ViewChild } from '@angular/core';
 import { AgmCoreModule, MapsAPILoader } from '@agm/core';
 import { FormControl } from '@angular/forms';
-import { Measure } from '../../models/measure';
+import { Misurazio } from '../../models/measure';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { isNumber } from 'util';
 import { MeasureService } from '../../services/measure.service';
@@ -89,3 +89,4 @@ export class NewmeasureComponent implements OnInit {
   }
 
 }
+*/

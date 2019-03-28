@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GlobalService } from './global.service';
 import { Observable } from 'rxjs';
-import { Measure } from '../models/measure';
 
 const headers = new HttpHeaders({'Content-Type' : 'application/json; charset=utf-8'});
 
@@ -15,7 +14,7 @@ export class MeasureService {
 
   constructor(private http: HttpClient, public global: GlobalService) { }
 
-  getById(id: number): Observable<Measure>{
+ /* getById(id: number): Observable<Measure>{
     return this.http.get<Measure>(this.measuresUrl + '/' + id);
   }
 
@@ -25,5 +24,5 @@ export class MeasureService {
 
   saveMeasure(measure: Measure): Observable<Measure>{
     return this.http.post<Measure>(this.measuresUrl, measure, {headers});
-  }
+  }*/
 }

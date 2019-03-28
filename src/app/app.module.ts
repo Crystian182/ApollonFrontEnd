@@ -12,7 +12,7 @@ import { NgbModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
-import { NewmeasureComponent } from './components/newmeasure/newmeasure.component';
+//import { NewmeasureComponent } from './components/newmeasure/newmeasure.component';
 import { CrudComponent } from './components/crud/crud.component';
 import { NewobjectComponent } from './components/newobject/newobject.component';
 
@@ -20,7 +20,7 @@ import { NewobjectComponent } from './components/newobject/newobject.component';
   declarations: [
     AppComponent,
     HomeComponent,
-    NewmeasureComponent,
+    //NewmeasureComponent,
     CrudComponent,
     NewobjectComponent
   ],
@@ -45,7 +45,7 @@ import { NewobjectComponent } from './components/newobject/newobject.component';
   providers: [],
   bootstrap: [AppComponent],
   entryComponents: [
-    NewmeasureComponent,
+    //NewmeasureComponent,
     NewobjectComponent
   ]
 })

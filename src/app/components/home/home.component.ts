@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MeasureService } from '../../services/measure.service';
-import { Measure } from '../../models/measure';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NewmeasureComponent } from '../newmeasure/newmeasure.component';
 
 @Component({
   selector: 'app-home',
@@ -10,18 +8,18 @@ import { NewmeasureComponent } from '../newmeasure/newmeasure.component';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  measures: Measure[] = []
+  //measures: Measure[] = []
 
   constructor(public measureService: MeasureService,
               private modalService: NgbModal) { }
 
   ngOnInit() {
-    this.measureService.getAll().subscribe(measures => {
+    /*this.measureService.getAll().subscribe(measures => {
       this.measures = measures;
-    })
+    })*/
   }
 
-  newMeasure() {
+  /*newMeasure() {
     this.modalService.open(NewmeasureComponent).result.then((measure) => {
       if(measure != undefined) {
         this.measures.push(measure)
@@ -34,6 +32,6 @@ export class HomeComponent implements OnInit {
   deleteMeasure() {
     console.log("ciao")
 
-}
+  }*/
 
 }
