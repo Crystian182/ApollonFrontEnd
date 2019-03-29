@@ -71,18 +71,30 @@ export class CrudComponent implements OnInit {
   }
 
   setPersona(p) {
+    this.selectedMisurazione = undefined;
+    this.selectedRecapito = undefined;
+    this.selectedCentralina = undefined;
     this.selectedPersona = p;
   }
 
   setRecapito(r) {
+    this.selectedPersona = undefined;
+    this.selectedMisurazione = undefined;
+    this.selectedCentralina = undefined;
     this.selectedRecapito = r;
   }
 
   setCentralina(c) {
+    this.selectedPersona = undefined;
+    this.selectedRecapito = undefined;
+    this.selectedMisurazione = undefined;
     this.selectedCentralina = c;
   }
 
   setMisurazione(m) {
+    this.selectedPersona = undefined;
+    this.selectedRecapito = undefined;
+    this.selectedCentralina = undefined;
     this.selectedMisurazione = m;
   }
 
