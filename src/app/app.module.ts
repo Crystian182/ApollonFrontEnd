@@ -13,12 +13,20 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 import { CrudComponent } from './components/crud/crud.component';
 import { ModalComponent } from './components/modal/modal.component';
+import { D3TestComponent } from './components/d3-test/d3-test.component';
+import { MapHeatLayerComponent } from './components/map-heat-layer/map-heat-layer.component';
+import { OSMComponent } from './components/osm/osm.component';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CrudComponent,
-    ModalComponent
+    ModalComponent,
+    D3TestComponent,
+    MapHeatLayerComponent,
+    OSMComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +38,7 @@ import { ModalComponent } from './components/modal/modal.component';
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDeqBKjtOUNXR_H33V1oWKYSWWjsGA3J-E',
       language: 'it',
-      libraries: ['geometry', 'places']
+      libraries: ['geometry', 'places', 'visualization']
     }),
     NgbModalModule,
     ReactiveFormsModule,

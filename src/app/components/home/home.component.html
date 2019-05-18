@@ -1,0 +1,32 @@
+<body>
+  <div class="row" style="margin-top: 1%; margin-left: 0.5%; margin-right: 0.5%">
+    <div class="col-md-3" style="padding: 0;">
+      <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; height: 10rem;" >
+      <h1 style="text-align: center;">LOGO</h1>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="card card-body mb-3" style="border-color: transparent; box-shadow: 10px 10px 5px #aaaaaa; height: 10rem; background-image: url(../../assets/navbar-background.jpg); background-position: center center;" >
+      </div>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 0%; margin-left: 0.5%; margin-right: 0.5%">
+      <div class="col-md-3" style="padding: 0">
+        <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; height: 100%" >
+          <form>
+            <input type="text" placeholder="Inserisci un indirizzo..." #address>
+            <button (click)="search(address.value)">Cerca</button>
+          </form>
+          <div *ngFor="let res of searchResults">
+            {{res.display_name}}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; padding: 0px" >
+          <div id="map" class="map"></div>
+        </div>
+      </div>
+    </div>
+</body>
+  

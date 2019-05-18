@@ -1,0 +1,10 @@
+<!-- Mappa Google -->
+<input class="form-control" placeholder="Cerca" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #search [formControl]="searchControl">
+<div style="line-height:50%;"><br></div>
+<agm-map [latitude]="latitudine" [longitude]="longitudine" [zoom]="13" [mapTypeId]="'satellite'" (mapReady)="onMapLoad($event)">
+  <agm-marker [markerDraggable]="true" [latitude]="latitudine" [longitude]="longitudine" (dragEnd)="markerDragEnd($event)"></agm-marker>
+</agm-map>
+
+<button (click)="switch()">Switch</button>
+<button (click)="changeGradient()">Change Gradient</button>
+<button (click)="changeRadius()">Change Radius</button>
