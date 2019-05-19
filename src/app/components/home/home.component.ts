@@ -57,7 +57,16 @@ export class HomeComponent implements OnInit {
         console.log(res)
         this.searchResults = res
       })
+    } else{
+        alert("Inserisci un indirizzo valido")
     }
+  }
+
+  zoomIn(lat, lon){
+    console.log(lat,lon)
+    var view = this.map.getView();
+    view.setCenter(ol.proj.fromLonLat([Number(lon), Number(lat)]));
+    view.setZoom(8);
   }
 
 }

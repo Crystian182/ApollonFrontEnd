@@ -1,8 +1,8 @@
 <body>
   <div class="row" style="margin-top: 1%; margin-left: 0.5%; margin-right: 0.5%">
     <div class="col-md-3" style="padding: 0;">
-      <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; height: 10rem;" >
-      <h1 style="text-align: center;">LOGO</h1>
+      <div class="card card-body mb-3 justify-content-center align-self-center" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; height: 10rem;" >
+          <img src="../../assets/Immagine.png" class="img-fluid" alt="Responsive image">
       </div>
     </div>
     <div class="col-md-9">
@@ -11,19 +11,27 @@
     </div>
   </div>
   <div class="row" style="margin-top: 0%; margin-left: 0.5%; margin-right: 0.5%">
-      <div class="col-md-3" style="padding: 0">
+      <div class="col-md-3" style="padding: 0;">
         <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; height: 100%" >
           <form>
-            <input type="text" placeholder="Inserisci un indirizzo..." #address>
-            <button (click)="search(address.value)">Cerca</button>
+            <div class="row">
+              <div class="col-md-10" style="padding:0; margin-left: 4%">
+                <input type="text" class="form-control form-control-sm" placeholder="Inserisci un indirizzo" #address > 
+              </div>
+              <div class="col-md-1"  style="padding:0;  text-align: center;">
+                <button type="button" style="border-color: transparent; background-color: transparent;" (click)="search(address.value)"><span class="fa fa-search" style="text-align: center"></span></button>
+              </div>
+            </div>
           </form>
-          <div *ngFor="let res of searchResults">
-            {{res.display_name}}
+          <div class="row" style="margin-top: 5%">
+            <div *ngFor="let res of searchResults" class="card card-body mb-3" style="border-color: lightgrey;" >
+              <a (click)="zoomIn(res.lat, res.lon)">{{res.display_name}}</a>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-md-9">
-        <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; padding: 0px" >
+      <div class="col-md-9" style="padding-bottom: 0">
+        <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; padding: 0" >
           <div id="map" class="map"></div>
         </div>
       </div>
