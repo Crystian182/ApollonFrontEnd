@@ -25,7 +25,7 @@
           </form>
           <div class="row" style="margin-top: 5%">
             <div *ngFor="let res of searchResults" class="card card-body mb-3" style="border-color: lightgrey;" >
-              <a (click)="zoomIn(res.lat, res.lon)">{{res.display_name}}</a>
+              <a (click)="zoomIn(res.lat, res.lon)" style=" cursor: pointer;">{{res.display_name}}</a>
             </div>
           </div>
         </div>
