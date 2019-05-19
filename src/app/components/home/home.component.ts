@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OsmService } from 'src/app/services/osm.service';
+import { MisurazioneService } from 'src/app/services/misurazione.service';
 
 declare var ol: any;
 
@@ -15,22 +16,25 @@ export class HomeComponent implements OnInit {
   latitude: number = 40.35481;
   longitude: number = 18.17244;
   searchResults: any[] = [];
+  heatmapData: any[] = [];
+  data: any;
 
-  constructor(private osmService: OsmService) { }
+  constructor(private osmService: OsmService,
+              private misurazioneService: MisurazioneService) { }
 
   ngOnInit() {
 
-    var mousePositionControl = new ol.control.MousePosition({
-      coordinateFormat: ol.coordinate.createStringXY(4),
-      projection: 'EPSG:4326',
-      // comment the following two lines to have the mouse position
-      // be placed within the map.
-      className: 'custom-mouse-position',
-      target: document.getElementById('mouse-position'),
-      undefinedHTML: '&nbsp;'
-    });
+    this.misurazioneService.getAllTest().subscribe(res => {
+      this.layer = new ol.source.OSM()
 
-    this.layer = new ol.source.OSM()
+      this.data = new ol.source.Vector(); 
+      for(let d of res) {
+        var pointFeature = new ol.Feature({
+          geometry: new ol.geom.Point(ol.proj.fromLonLat([d.lng, d.lat])),
+          weight: d.weight 
+        });
+        this.data.addFeature(pointFeature);
+      }    
 
     this.map = new ol.Map({
       target: 'map',
@@ -42,13 +46,19 @@ export class HomeComponent implements OnInit {
       layers: [
         new ol.layer.Tile({
           source: this.layer
-        })
+        }), new ol.layer.Heatmap({
+          source: this.data,
+          opacity: 0.7,
+          radius: 15,
+          blur: 20
+       })
       ],
       view: new ol.View({
         center: ol.proj.fromLonLat([this.longitude, this.latitude]),
         zoom: 8
       })
     });
+    })
   }
 
   search(address) {
