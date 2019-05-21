@@ -1,3 +1,22 @@
+.foo {
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+    border: 1px solid rgba(0, 0, 0, .2);
+  }
+  
+  .green {
+    background: #2db41f;
+  }
+  
+  .yellow {
+    background: #cad10e;
+  }
+  
+  .red {
+    background: #d10a0a;
+  }
 .mycard:hover {
     background-color: rgb(212, 212, 212);
   }

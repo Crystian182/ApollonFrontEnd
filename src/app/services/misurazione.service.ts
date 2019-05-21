@@ -15,6 +15,18 @@ export class MisurazioneService {
 
   constructor(private http: HttpClient, public global: GlobalService) { }
 
+  d3test(): Observable<any>{
+    return this.http.get<any>('https://api.coindesk.com/v1/bpi/historical/close.json?start=2017-12-31&end=2018-04-01');
+  }
+
+  getEFMedium(): Observable<any[]>{
+    return this.http.get<any[]>(this.misurazioneUrl + '/efmedium');
+  }
+
+  getCarrierMedium(): Observable<any[]>{
+    return this.http.get<any[]>(this.misurazioneUrl + '/carriermedium');
+  }
+
   getAll(): Observable<Misurazione[]>{
     return this.http.get<Misurazione[]>(this.misurazioneUrl);
   }
