@@ -1,32 +1,11 @@
 <body>
   <div class="row" style="margin-top: 1%; margin-left: 0.5%; margin-right: 0.5%">
-    <div class="col-md-3" style="padding: 0;">
-      <div class="card card-body mb-3 justify-content-center align-self-center" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; height: 10rem;" >
-          <img src="../../assets/Logo.png" class="img-fluid" alt="Responsive image">
+      <div class="card card-body mb-3" style="border-color: transparent; box-shadow: 10px 10px 5px #aaaaaa; height: 10rem; background-image: url(../../assets/sfondo_navbar.png); background-position: left; background-size: 100%; background-repeat: no-repeat" >
       </div>
-    </div>
-    <div class="col-md-9">
-      <div class="card card-body mb-3" style="border-color: transparent; box-shadow: 10px 10px 5px #aaaaaa; height: 10rem; background-image: url(../../assets/navbar-background.jpg); background-position: center center;" >
-      </div>
-    </div>
-  </div>
-  <div class="row" style="margin-top: 1%; margin-left: 0.5%; margin-right: 0.5%">
-
-      <div class="card card-body mb-3 justify-content-center align-self-center" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; height: 10rem; background-image: url(../../assets/navbar-background.jpg); background-position: center center; background-repeat: no-repeat; background-size: cover" >
-        <div class="row">
-        <div class="col-md-3" style="padding: 0">
-          <img src="../../assets/Logo.png">
-        </div>  
-        <div class="col-md-9">
-          
-        </div> 
-        </div>
-      </div>
-
   </div>
   <div class="row" style="margin-top: 0%; margin-left: 0.5%; margin-right: 0.5%">
       <div class="col-md-3" style="padding: 0;">
-        <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; height: 100%" >
+        <div class="card card-body mb-3 card1" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; height: 100%" >
           <form>
             <div class="row">
               <div class="col-md-10" style="padding:0; margin-left: 4%">
@@ -37,9 +16,17 @@
               </div>
             </div>
           </form>
-          <div class="row" style="margin-top: 5%">
-            <div *ngFor="let res of searchResults" class="card card-body mb-3" style="border-color: lightgrey;" >
-              <a (click)="zoomIn(res.lat, res.lon)" style=" cursor: pointer;">{{res.display_name}}</a>
+          <div *ngIf="!details" class="row" style="margin-top: 5%">
+            <p *ngIf="searchAddress" style = "margin-left: 4%">Risultati per <b>{{searchAddress}}</b>:</p>
+            <div *ngFor="let res of searchResults" class="card card-body mb-3 mycard" style="border-color: lightgrey; box-shadow: 5px 5px 5px #aaaaaa;" >
+              <a (click)="zoomIn(res.display_name,res.lat, res.lon)" style="cursor: pointer;">{{res.display_name}}</a>
+            </div>
+          </div>
+          <div *ngIf="details" class="row" style="margin-top: 5%">
+            <button type="button" class="btn" (click)="back()" style="background-color: lightgray">Indietro</button>
+            <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; margin-top: 2%" >
+              <h3><b>{{result.display_name}}</b></h3>
+              <p><br> {{result.lat}}° , {{result.lon}}°</p>
             </div>
           </div>
         </div>
@@ -51,4 +38,3 @@
       </div>
     </div>
 </body>
-  

@@ -554,6 +554,25 @@ export class OSMComponent implements OnInit {
       weight: 0.5 // e.g. temperature
   });
   this.data.addFeature(pointFeature);*/
+  
+
+  var vectorLayer = new ol.layer.Vector({
+    source:new ol.source.Vector({
+    features: [new ol.Feature({
+    geometry: new ol.geom.Point(ol.proj.transform([(this.longitude), (this.latitude)], 'EPSG:4326', 'EPSG:3857')),
+    })]
+    }),
+    style: new ol.style.Style({
+    image: new ol.style.Icon({
+    anchor: [0.5, 0.5],
+    anchorXUnits: "fraction",
+    anchorYUnits: "fraction",
+    scale: 0.08,
+    src: "https://image.flaticon.com/icons/svg/33/33622.svg"
+    
+    })
+    })
+    });
 
 
     this.map = new ol.Map({
@@ -571,7 +590,7 @@ export class OSMComponent implements OnInit {
           opacity: 0.7,
           radius: 15,
           blur: 20
-       })
+       }), vectorLayer
       ],
       view: new ol.View({
         center: ol.proj.fromLonLat([this.longitude, this.latitude]),
@@ -600,5 +619,6 @@ export class OSMComponent implements OnInit {
     var view = this.map.getView();
     view.setCenter(ol.proj.fromLonLat([this.longitude, this.latitude]));
     view.setZoom(8);
-  }
+  
+      }
 }
