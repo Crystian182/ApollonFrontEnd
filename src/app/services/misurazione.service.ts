@@ -27,6 +27,10 @@ export class MisurazioneService {
     return this.http.get<any[]>(this.misurazioneUrl + '/carriermedium');
   }
 
+  getDayChanges(): Observable<any[]>{
+    return this.http.get<any[]>(this.misurazioneUrl + '/daychanges');
+  }
+
   getAll(): Observable<Misurazione[]>{
     return this.http.get<Misurazione[]>(this.misurazioneUrl);
   }

@@ -142,6 +142,8 @@ export class HomeComponent implements OnInit {
     this.details = false;
   }
 
+
+
   showPieChart() {
     this.misurazioneService.getEFMedium().subscribe(res => {
       var data = res;
@@ -153,14 +155,14 @@ export class HomeComponent implements OnInit {
       ];*/
     //console.log(dataa)
   
-    var svgWidth = 500, svgHeight = 300, radius =  Math.min(svgWidth, svgHeight) / 2;
+    var svgWidth = 450, svgHeight = 450, margin = 40, radius =  Math.min(svgWidth, svgHeight) / 2 - margin;
     var svg = d3.select('svg')
         .attr("width", svgWidth)
         .attr("height", svgHeight);
     
     //Create group element to hold pie chart    
     var g = svg.append("g")
-        .attr("transform", "translate(" + radius + "," + radius + ")") ;
+        .attr("transform", "translate(" + svgWidth/2 + "," + svgHeight/2 + ")") ;
     
     var color = d3.scaleOrdinal(d3.schemeCategory10);
     
@@ -186,7 +188,10 @@ export class HomeComponent implements OnInit {
           return "#cad10e";
         } else if(d.data.label=="Alto") {
           return "#d10a0a";
-        }});
+        }})
+        .attr("stroke", "black")
+  .style("stroke-width", "2px")
+  .style("opacity", 0.7);
             
     var label = d3.arc()
         .outerRadius(radius)
@@ -207,8 +212,9 @@ export class HomeComponent implements OnInit {
   }
 
   showLineChart() {
-    this.misurazioneService.d3test().subscribe(res => {
+    this.misurazioneService.getDayChanges().subscribe(res => {
       var parsedData = this.parseData(res);
+      console.log(parsedData)
       this.drawChart(parsedData);
     })
     
@@ -216,10 +222,10 @@ export class HomeComponent implements OnInit {
   
   parseData(data) {
     var arr = [];
-    for (var i in data.bpi) {
+    for (var i of data) {
         arr.push({
-            date: new Date(i), //date
-            value: +data.bpi[i] //convert string to number
+            hour: d3.timeParse("%H")(i.hour), //date
+            value: +i.level //convert string to number
         });
     }
     return arr;
@@ -245,9 +251,9 @@ drawChart(data) {
       .rangeRound([height, 0]);
   
   var line = d3.line()
-      .x(function(d) { return x(d.date)})
+      .x(function(d) { return x(d.hour)})
       .y(function(d) { return y(d.value)})
-      x.domain(d3.extent(data, function(d) { return d.date }));
+      x.domain(d3.extent(data, function(d) { return d.hour }));
       y.domain(d3.extent(data, function(d) { return d.value }));
   
   g.append("g")
@@ -264,7 +270,7 @@ drawChart(data) {
       .attr("y", 6)
       .attr("dy", "0.71em")
       .attr("text-anchor", "end")
-      .text("Price ($)");
+      .text("Level (dBm)");
   
   g.append("path")
       .datum(data)
@@ -309,7 +315,9 @@ drawChart(data) {
 
     // Scale the range of the data in the domains
     x.domain(data.map(function(d) { return d._id; }));
-    y.domain([-90, d3.max(data, function(d) { return d.avgdbm; })-10]);
+    y.domain([d3.max(data, function(d) { return d.avgdbm; })-10, -100]);
+
+    var color = d3.scaleOrdinal(d3.schemeCategory10);
 
     // append the rectangles for the bar chart
     svg.selectAll(".bar")
@@ -317,6 +325,8 @@ drawChart(data) {
       .enter().append("rect")
         .attr("class", "bar")
         .attr("x", function(d) { return x(d._id); })
+        .attr("fill", function(d) {
+            return color(d.avgdbm);})
         .attr("width", x.bandwidth())
         .attr("y", function(d) { return y(d.avgdbm); })
         .attr("height", function(d) { return height - y(d.avgdbm); });
@@ -328,7 +338,14 @@ drawChart(data) {
 
     // add the y Axis
     svg.append("g")
-        .call(d3.axisLeft(y));
+        .call(d3.axisLeft(y))
+        .append("text")
+        .attr("fill", "#000")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", "0.71em")
+        .attr("text-anchor", "end")
+        .text("Level (dBm)");;
   });
 
   }
