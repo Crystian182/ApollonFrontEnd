@@ -22,6 +22,8 @@ export class HomeComponent implements OnInit {
   details: boolean;
   searchAddress: any;
   result: any;
+  emptyresults: boolean = false;
+  sumelem: Number;
 
   constructor(private osmService: OsmService,
               private misurazioneService: MisurazioneService) { }
@@ -35,16 +37,17 @@ export class HomeComponent implements OnInit {
     this.misurazioneService.getAllTest().subscribe(res => {
       this.details = false;
       this.layer = new ol.source.OSM()
-      this.data = new ol.source.Vector(); 
+      this.data = new ol.source.Vector();
       for(let d of res) {
         var pointFeature = new ol.Feature({
           geometry: new ol.geom.Point(ol.proj.fromLonLat([d.lng, d.lat])),
-          weight: d.weight 
+          weight: d.weight
         });
         this.data.addFeature(pointFeature);
       }   
 
     var vectorLayer = new ol.layer.Vector({
+      name: 'firstvector',
       source:new ol.source.Vector({
       features: [new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.transform([(this.longitude), (this.latitude)], 'EPSG:4326', 'EPSG:3857')),
@@ -74,9 +77,9 @@ export class HomeComponent implements OnInit {
           source: this.layer
         }), new ol.layer.Heatmap({
           source: this.data,
-          opacity: 0.7,
-          radius: 15,
-          blur: 20
+          opacity: 0.6,
+          radius: 12,
+          blur: 25,
        }), vectorLayer
       ],
       view: new ol.View({
@@ -89,11 +92,24 @@ export class HomeComponent implements OnInit {
 
   search(address) {
     if(address != "") {
-      this.details = false;  
-      this.searchAddress = address;
+      this.emptyresults = false;  
       this.osmService.search(address).subscribe(res => {
-        console.log(res)
-        this.searchResults = res
+        if(res.length === 0){
+          this.emptyresults = true;
+          var view = this.map.getView();
+          view.setCenter(ol.proj.fromLonLat([this.longitude, this.latitude]));
+          view.setZoom(10); 
+          var layers =  this.map.getLayers();
+          layers.forEach( function (layer) {
+            if(layer.get('name')==='vector'){
+              layers.pop(layer);
+              console.log(layers)
+            }
+          });
+        }
+        this.details = false;
+        this.searchResults = res;
+        this.searchAddress = address;
       })
     } else{
         alert("Inserisci un indirizzo valido")
@@ -105,6 +121,7 @@ export class HomeComponent implements OnInit {
     view.setCenter(ol.proj.fromLonLat([Number(lon), Number(lat)]));
     view.setZoom(12); 
     var vector = new ol.layer.Vector({
+      name: 'vector',
       source:new ol.source.Vector({
       features: [new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.transform([Number(lon),Number(lat)], 'EPSG:4326', 'EPSG:3857')),
@@ -112,7 +129,7 @@ export class HomeComponent implements OnInit {
       }),
       style: new ol.style.Style({
         image: new ol.style.Icon({
-          opacity: 0.5,
+          opacity: 1,
           anchor: [0.5, 0.5],
           anchorXUnits: "fraction",
           anchorYUnits: "fraction",
@@ -121,14 +138,19 @@ export class HomeComponent implements OnInit {
           })
       })
     });
-  this.map.getLayers().forEach(layer => {
-   // console.log(layer.get('name'))
-    if(layer.get('name')==='vectorLayer'){
-      console.log('quii')
-      this.map.removeLayer(layer)
-    }
-  });
-   // this.map.removeLayer()
+
+    var layers =  this.map.getLayers();
+    layers.forEach( function (layer) {
+      if(layer.get('name')==='firstvector'){
+          layers.pop(layer);
+          console.log(layers)
+      }
+      if(layer.get('name')==='vector'){
+        layers.pop(layer);
+        console.log(layers)
+      }
+    });
+  
     this.map.addLayer(vector)
     this.details = true;  
     this.result={
