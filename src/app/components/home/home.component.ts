@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
   searchAddress: any;
   result: any;
   emptyresults: boolean = false;
+  sumelem: Number;
 
   constructor(private osmService: OsmService,
               private misurazioneService: MisurazioneService) { }
@@ -36,11 +37,11 @@ export class HomeComponent implements OnInit {
     this.misurazioneService.getAllTest().subscribe(res => {
       this.details = false;
       this.layer = new ol.source.OSM()
-      this.data = new ol.source.Vector(); 
+      this.data = new ol.source.Vector();
       for(let d of res) {
         var pointFeature = new ol.Feature({
           geometry: new ol.geom.Point(ol.proj.fromLonLat([d.lng, d.lat])),
-          weight: d.weight 
+          weight: d.weight
         });
         this.data.addFeature(pointFeature);
       }   
@@ -76,9 +77,9 @@ export class HomeComponent implements OnInit {
           source: this.layer
         }), new ol.layer.Heatmap({
           source: this.data,
-          opacity: 0.7,
-          radius: 15,
-          blur: 20
+          opacity: 0.6,
+          radius: 12,
+          blur: 25,
        }), vectorLayer
       ],
       view: new ol.View({
