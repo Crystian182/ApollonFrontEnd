@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit {
   result: any;
   emptyresults: boolean = false;
   sumelem: Number;
+  efmedium: any[] = []
 
   constructor(private osmService: OsmService,
               private misurazioneService: MisurazioneService) { }
@@ -169,6 +170,7 @@ export class HomeComponent implements OnInit {
   showPieChart() {
     this.misurazioneService.getEFMedium().subscribe(res => {
       var data = res;
+      this.efmedium = data;
       //console.log(data)
       /*var data = [
       {platform: "Tim", "percentage": 50}, 

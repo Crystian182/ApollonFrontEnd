@@ -7,7 +7,7 @@
   </div>
   <div class="row" style="margin-top: 8.5rem; margin-left: 0.5%; margin-right: 0">
       <div class="col-md-3" style="padding: 0;">
-        <div class="card card-body mb-3 card1" style="border-color: transparent; box-shadow: 10px 10px 5px #aaaaaa; height: 96%;" >
+        <div class="card card-body mb-3 card1" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; height: 96%;" >
           <form>
             <div class="row">
               <div class="col-md-10" style="padding:0; margin-left: 4%">
@@ -44,14 +44,21 @@
       <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; height: 100%" >
         <h2>Qual è il livello di esposizione medio?</h2>
         <div class="row">
-          <div class="col-md-6" style="padding: 0">
-              Testo
+          <div class="col-md-6" style="padding-top: 1%">
+              <p>Attraverso i dati provenienti dai sensori di campo magnetico degli smartphone degli utenti, è possibile visualizzare la percentuale di essi che è esposta a livelli di radiazione bassi, medi e alti.</p>
+              <p>I limiti di esposizione totale, previsti dalla normativa nazionale, per le basse frequenze (ELF) sono di 100 micro Tesla, il valore di attenzione e' di 10 micro Tesla e l'obiettivo qualita' e' di 3 micro Tesla. I limiti per le alte frequenze (radio frequenze e microonde), sono di 6 V/m per le zone intensamente frequentate (es. citta) e di 20 V/m per le zone non intensamente frequentate (es. campagna). La Raccomandazione comunitaria fissa il valore limite per le basse frequenze in 100 micro Tesla e per le alte frequenze il limite e' di 41,2 V/m, per le frequenze tipiche della telefonia cellulare a 900 Mhz, e di 58,3 V/m per quelle a 1800 Mhz.</p>
+              <p><b>[Fonte: www.aduc.it]</b></p>
+              <p>Il <b>{{efmedium[0]?.percentage}}%</b> dei nostri utenti è esposto a un livello di radiazione <b>{{efmedium[0]?.label}}</b>.<br>
+                  Il <b>{{efmedium[1]?.percentage}}%</b> dei nostri utenti è esposto a un livello di radiazione <b>{{efmedium[1]?.label}}</b>.<br>
+                  Il <b>{{efmedium[2]?.percentage}}%</b> dei nostri utenti è esposto a un livello di radiazione <b>{{efmedium[2]?.label}}</b>.</p>
             </div>
-          <div class="col-md-6" style="padding: 0">
+          <div class="col-md-6" style="text-align: center">
             <svg class="pie-chart"></svg>
-            <div><div class="foo green"></div>Basso</div>
-            <div><div class="foo yellow"></div>Medio</div>
-            <div><div class="foo red"></div>Alto</div>
+            <div>
+            <div style="display: inline-block;"><div class="foo green"></div>Basso</div>
+            <div style="display: inline-block"><div class="foo yellow"></div>Medio</div>
+            <div style="display: inline-block"><div class="foo red"></div>Alto</div>
+            </div>
           </div>
         </div>
       </div>
@@ -60,10 +67,14 @@
       <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; height: 100%" >
         <h2>Come varia la potenza irradiata a Lecce durante la giornata?</h2>
         <div class="row">
-          <div class="col-md-6" style="padding: 0">
-              Testo
+          <div class="col-md-6" style="padding-top: 1%">
+              <p>Il dBm indica il livello del segnale, espresso in milliWatt, rapportato ad un segnale di riferimento (definito come "rumore" pari a 1 milliWatt). 
+                Poiché il dBm rappresenta il rapporto fra due quantità omogenee (Segnale/Rumore), si tratta di una grandezza adimensionale (senza unità di misura), quindi di un numero puro.</p>
+                <p><b>[Fonte: www.pc-facile.it]</b></p>
+                <p>Abbiamo sfruttato i dati provenienti dagli smartphone degli utenti per ottenere l'andamento medio nelle 24h dei livelli di esposizione ai segnali telefonici nella città di Lecce.</p>
+              <img src="../../assets/chart.png">
             </div>
-          <div class="col-md-6" style="padding: 0">
+          <div class="col-md-6" style="text-align: center; vertical-align: center">
             <svg id="linechart" class="line-chart"></svg>
           </div>
         </div>
@@ -73,10 +84,14 @@
       <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; height: 100%" >
         <h2>Qual è il gestore telefonico che inquina di più?</h2>
         <div class="row">
-          <div class="col-md-6" style="padding: 0">
-              Testo
+          <div class="col-md-6" style="padding-top: 1%">
+              <p>I nostri utenti ci inviano anche dati relativi al proprio gestore telefonico.</p>
+              <p>Gli operatori telefonici (gestori) attualmente sul mercato per il traffico pubblico sono quattro: Telecom Italia, Vodafone, Wind e H3G. I primi due offrono servizi con tecnologia GSM (900 MHz), DCS (1800 MHz), UMTS (2000 MHz) e LTE (800 - 1800 - 2600 MHz); L´operatore Wind offre servizi con tecnologia GSM (900 Mhz), DCS (1800 MHz), UMTS (2000 MHz) e LTE (800 - 2600 MHz). L´operatore H3G è esclusivamente dedito al servizio cellulare di terza generazione UMTS e LTE (1800 - 2600 MHz).</p>
+              <p>Le Staszione Radio Base (SRB) sono distribuite sul territorio in maniera capillare in funzione della densità di popolazione, essendo prevalentemente concentrate nelle aree urbane densamente abitate. A seconda del numero di utenti serviti, le SRB sono distanziate tra loro di poche centinaia di metri nelle grandi città fino a diversi chilometri nelle aree rurali.</p>
+              <p>Ogni SRB è in grado di servire una porzione di territorio limitata, detta "cella", le cui dimensioni dipendono dalla densità degli utenti da servire nell´area, dall´altezza delle installazioni, dalla potenza impiegata e dalla tipologia dell´antenna utilizzata (come da figure).</p>
+              <p><b>[Fonte: www.arape.it]</b></p>
             </div>
-          <div class="col-md-6" style="padding: 0">
+          <div class="col-md-6" style="text-align: center">
             <svg id="barchart" class="bar-chart" style="fill: blue"></svg>
           </div>
         </div>
