@@ -35,8 +35,8 @@ export class MisurazioneService {
     return this.http.get<Misurazione[]>(this.misurazioneUrl);
   }
 
-  getAllTest(): Observable<any[]>{
-    return this.http.get<any[]>(this.misurazioneUrl);
+  getMedia(): Observable<any[]>{
+    return this.http.get<any[]>(this.misurazioneUrl + '/media');
   }
 
   saveMisurazione(misurazione: Misurazione): Observable<Misurazione>{

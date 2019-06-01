@@ -13,20 +13,14 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 import { CrudComponent } from './components/crud/crud.component';
 import { ModalComponent } from './components/modal/modal.component';
-import { MapHeatLayerComponent } from './components/map-heat-layer/map-heat-layer.component';
-import { OSMComponent } from './components/osm/osm.component';
 import { HomeComponent } from './components/home/home.component';
-import { TestComponent } from './components/test/test.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CrudComponent,
     ModalComponent,
-    MapHeatLayerComponent,
-    OSMComponent,
-    HomeComponent,
-    TestComponent
+    HomeComponent
   ],
   imports: [
     BrowserModule,
