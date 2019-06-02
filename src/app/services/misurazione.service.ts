@@ -40,6 +40,11 @@ export class MisurazioneService {
                                 '&lat2=' + lat2 + '&long1=' + long1 + '&long2=' + long2);
   }
 
+  getMediaMese(precision: Number, lat1: Number, lat2: Number,long1: Number,long2: Number, start: String, end: String): Observable<any[]>{
+    return this.http.get<any[]>(this.misurazioneUrl + '/media/mese/from=' + start + '&to=' + end + '&zoom=' + precision + '&lat1=' + lat1 +
+                                '&lat2=' + lat2 + '&long1=' + long1 + '&long2=' + long2);
+  }
+
   getYears(): Observable<any[]>{
     return this.http.get<any[]>(this.misurazioneUrl + '/getyears');
   }

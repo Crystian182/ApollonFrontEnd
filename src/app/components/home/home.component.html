@@ -153,10 +153,15 @@
                   <option *ngFor="let h of endHours" value="{{ h }}">{{ h }}</option>
               </select>
           </div>
+          <div *ngIf="selectedVariability != undefined">
+            <button type="button" class="btn btn-success" (click)="startAnimation()">Inizia Animazione</button>
+            <button *ngIf="animating" type="button" class="btn btn-danger" (click)="stopAnimation()">Ferma Animazione</button>
+          </div>
         </div>
         <div class="row">
           <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 5px 5px 5px #aaaaaa; padding: 0; margin-right: 0" >
             <div id="map" class="map"></div>
+            <div *ngIf="animating">{{ label }}</div>
           </div>
         </div>
       </div>

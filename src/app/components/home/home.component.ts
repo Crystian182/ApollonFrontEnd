@@ -3,6 +3,7 @@ import { OsmService } from 'src/app/services/osm.service';
 import { MisurazioneService } from 'src/app/services/misurazione.service';
 import * as d3 from 'd3'
 import { Mese } from 'src/app/models/Mese';
+import { interval } from 'rxjs';
 
 declare var ol: any;
 
@@ -35,7 +36,7 @@ export class HomeComponent implements OnInit {
   opt: boolean = false;
   radiusValue: Number;
   blurValue: Number;
-  selectedVariability: String = '';
+  selectedVariability: String = undefined;
   startYears: String[] = [];
   endYears: String[] = [];
   selectedStartYear: String;
@@ -53,6 +54,11 @@ export class HomeComponent implements OnInit {
   endHours: String[] = [];
   selectedStartHour: String;
   selectedEndHour: String;
+  currentPrecision: any;
+  intervallTimer: any = interval(5000);
+  subscription: any;
+  animating: boolean = false;
+  label: String = "";
 
   constructor(private osmService: OsmService,
               private misurazioneService: MisurazioneService) { }
@@ -168,6 +174,7 @@ export class HomeComponent implements OnInit {
 
   updateLayer(evt) {
     let precision = this.switchZoom(this.currentZoom)
+    this.currentPrecision = precision;
     //y2 <= lat <= y1
     //x1 <= long <= x2
     //zoom -> endpoint diversi
@@ -763,7 +770,6 @@ export class HomeComponent implements OnInit {
     } else {
       this.selectedEndYear = endyear;
       this.misurazioneService.getMonthOfYears(endyear).subscribe(res => {
-        console.log(res)
         this.endMonths = [];
         this.endDays = [];
         this.endHours = [];
@@ -844,10 +850,6 @@ export class HomeComponent implements OnInit {
 
   ////////////////////////////////////////////////
 
-  
-
-  
-
   getNameOfMonth(value) {
     if(value == 1) {
       return 'Gennaio';
@@ -874,6 +876,101 @@ export class HomeComponent implements OnInit {
     } else if(value == 12) {
       return 'Dicembre';
     }
+  }
+
+  startAnimation() {
+    if(this.selectedVariability == 'anno') {
+      if(this.selectedStartYear == undefined || this.selectedEndYear == undefined) {
+        alert('Completa tutti i campi per iniziare l\'animazione')
+      } else {
+        console.log(this.selectedStartYear)
+        console.log(this.selectedEndYear)
+      }
+    } else if(this.selectedVariability == 'mese') {
+      if(this.selectedStartYear == undefined || this.selectedEndYear == undefined ||
+        this.selectedStartMonth == undefined || this.selectedEndMonth == undefined) {
+        alert('Completa tutti i campi per iniziare l\'animazione')
+      } else {
+        console.log(this.selectedStartYear + '-' + this.selectedStartMonth);
+        console.log(this.selectedEndYear + '-' + this.selectedEndMonth);
+        this.misurazioneService.getMediaMese(this.currentPrecision, this.lat1, this.lat2,
+          this.long1, this.long2, this.selectedStartYear + '-' + this.selectedStartMonth,
+          this.selectedEndYear + '-' + this.selectedEndMonth).subscribe(res => {
+            this.animateLayer(res);
+        })
+      }
+    } else if(this.selectedVariability == 'giorno') {
+      if(this.selectedStartYear == undefined || this.selectedEndYear == undefined ||
+        this.selectedStartMonth == undefined || this.selectedEndMonth == undefined ||
+        this.selectedStartDay == undefined || this.selectedEndDay == undefined) {
+        alert('Completa tutti i campi per iniziare l\'animazione')
+      } else {
+        console.log(this.selectedStartYear + '-' + this.selectedStartMonth + '-' + this.selectedStartDay);
+        console.log(this.selectedEndYear + '-' + this.selectedEndMonth + '-' + this.selectedEndDay);
+      }
+    } else if(this.selectedVariability == 'ora') {
+      if(this.selectedStartYear == undefined || this.selectedEndYear == undefined ||
+        this.selectedStartMonth == undefined || this.selectedEndMonth == undefined ||
+        this.selectedStartDay == undefined || this.selectedEndDay == undefined ||
+        this.selectedStartHour == undefined || this.selectedEndHour == undefined) {
+        alert('Completa tutti i campi per iniziare l\'animazione')
+      } else {
+        console.log(this.selectedStartYear + '-' + this.selectedStartMonth + '-' + this.selectedStartDay + ' ' + this.selectedStartHour);
+        console.log(this.selectedEndYear + '-' + this.selectedEndMonth + '-' + this.selectedEndDay + ' ' + this.selectedEndHour);
+      }
+    }
+  }
+
+  animateLayer(data) {
+    this.animating = true;
+    let i = 0;
+    let properties = Object.keys(data);
+    this.updateAnimationLayer(data[properties[i]])
+    this.label = properties[i];
+    i = 1;
+    this.subscription = this.intervallTimer.subscribe(() => {
+      this.updateAnimationLayer(data[properties[i]])
+      this.label = properties[i];
+      if(i == properties.length-1) {
+        i=0
+      } else {
+        i++;
+      }
+    });
+    //
+  }
+
+  updateAnimationLayer(data) {
+    this.map.removeLayer(this.heatmaplayer)
+    this.data = new ol.source.Vector();
+    for(let d of data) {
+      var pointFeature = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([d.longitudine, d.latitudine])),
+        weight: d.weight
+      });
+      this.data.addFeature(pointFeature);
+    }   
+
+    if(this.currentPrecision <= 2) {
+      this.radiusValue = 40
+      this.blurValue = 10
+    } else {
+      this.radiusValue = 15
+      this.blurValue = 30
+    }
+
+    this.heatmaplayer = new ol.layer.Heatmap({
+      source: this.data,
+      radius: this.radiusValue,
+      blur: this.blurValue
+    })
+    this.map.addLayer(this.heatmaplayer)
+  }
+
+  stopAnimation() {
+    this.subscription.unsubscribe();
+    this.animating = false;
+    this.label = "";
   }
 
   showPieChart() {
