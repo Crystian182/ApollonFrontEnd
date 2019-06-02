@@ -49,6 +49,10 @@ export class HomeComponent implements OnInit {
   endDays: Number[] = [];
   selectedStartDay: Number;
   selectedEndDay: Number;
+  startHours: String[] = [];
+  endHours: String[] = [];
+  selectedStartHour: String;
+  selectedEndHour: String;
 
   constructor(private osmService: OsmService,
               private misurazioneService: MisurazioneService) { }
@@ -276,21 +280,45 @@ export class HomeComponent implements OnInit {
   }
 
   onChange($event, variability) {
-    this.selectedVariability = variability;
-    if(this.selectedVariability == 'anno') {
+    if(variability == 'default') {
+      this.selectedVariability = undefined;
+      this.startYears = [];
+      this.endYears = [];
+      this.startMonths = [];
+      this.endMonths = [];
+      this.startDays = [];
+      this.endDays = [];
+      this.startHours = [];
+      this.endHours = [];
+      this.selectedStartYear = undefined;
+      this.selectedEndYear = undefined;
+      this.selectedStartMonth = undefined;
+      this.selectedEndMonth = undefined;
+      this.selectedStartDay = undefined;
+      this.selectedEndDay = undefined;
+      this.selectedStartHour = undefined;
+      this.selectedEndHour = undefined;
+    } else {
+      this.selectedVariability = variability;
+      this.startYears = [];
+      this.endYears = [];
+      this.startMonths = [];
+      this.endMonths = [];
+      this.startDays = [];
+      this.endDays = [];
+      this.startHours = [];
+      this.endHours = [];
+      this.selectedStartYear = undefined;
+      this.selectedEndYear = undefined;
+      this.selectedStartMonth = undefined;
+      this.selectedEndMonth = undefined;
+      this.selectedStartDay = undefined;
+      this.selectedEndDay = undefined;
+      this.selectedStartHour = undefined;
+      this.selectedEndHour = undefined;
       this.misurazioneService.getYears().subscribe(res => {
         this.startYears = res;
       })
-    } else if(this.selectedVariability == 'mese') {
-      this.misurazioneService.getYears().subscribe(res => {
-        this.startYears = res;
-      })
-    } else if(this.selectedVariability == 'giorno') {
-      this.misurazioneService.getYears().subscribe(res => {
-        this.startYears = res;
-      })
-    } else if(this.selectedVariability == 'ora') {
-
     }
   }
 
@@ -298,7 +326,9 @@ export class HomeComponent implements OnInit {
 
   onChangeStartYear($event, startyear) {
     if(startyear == 'default') {
-      
+      this.endYears = [];
+      this.selectedStartYear = undefined;
+      this.selectedEndYear = undefined;
     } else {
       this.selectedStartYear = startyear;
         this.misurazioneService.getYears().subscribe(res => {
@@ -314,7 +344,11 @@ export class HomeComponent implements OnInit {
   }
 
   onChangeEndYear($event, endyear) {
-    this.selectedEndYear = endyear;
+    if(endyear == 'default') {
+      this.selectedEndYear = undefined
+    } else {
+      this.selectedEndYear = endyear;
+    }
   }
 
   ////////////////////////////////////////////////
@@ -323,13 +357,22 @@ export class HomeComponent implements OnInit {
   //////////////////////////////// MESE
 
   onChangeStartYearOfMonth($event, startyear) {
-    this.selectedStartYear = startyear;
+    if(startyear == 'default') {
+      this.startMonths = [];
+      this.endMonths = [];
+      this.endYears = [];
+      this.selectedStartYear = undefined;
+      this.selectedStartMonth = undefined;
+      this.selectedEndYear = undefined;
+      this.selectedEndMonth = undefined;
+    } else {
+      this.selectedStartYear = startyear;
       this.misurazioneService.getMonthOfYears(startyear).subscribe(res => {
         this.startMonths = [];
-        this.selectedStartMonth = undefined;
-        this.endYears = [];
-        this.selectedEndYear = undefined;
         this.endMonths = [];
+        this.endYears = [];
+        this.selectedStartMonth = undefined;
+        this.selectedEndYear = undefined;
         this.selectedEndMonth = undefined;
         for(let m of res) {
            this.month = {
@@ -339,25 +382,39 @@ export class HomeComponent implements OnInit {
            this.startMonths.push(this.month)
         }
       })
+    }
   }
 
   onChangeStartMonth($event, startmonth) {
-    this.selectedStartMonth = startmonth;
-    this.misurazioneService.getYears().subscribe(res => {
-      this.endYears = [];
-      this.selectedEndYear = undefined;
+    if(startmonth == 'default') {
       this.endMonths = [];
+      this.endYears = [];
+      this.selectedStartMonth = undefined;
+      this.selectedEndYear = undefined;
       this.selectedEndMonth = undefined;
-      for(let y of res) {
-        if(y.anno >= this.selectedStartYear) {
-          this.endYears.push(y)
+    } else {
+      this.selectedStartMonth = startmonth;
+      this.misurazioneService.getYears().subscribe(res => {
+        this.endMonths = [];
+        this.endYears = [];
+        this.selectedEndYear = undefined;
+        this.selectedEndMonth = undefined;
+        for(let y of res) {
+          if(y.anno >= this.selectedStartYear) {
+            this.endYears.push(y)
+          }
         }
-      }
-    })
+      })
+    }
   }
 
   onChangeEndYearOfMonth($event, endyear) {
-    this.selectedEndYear = endyear;
+    if(endyear == 'default') {
+      this.endMonths = [];
+      this.selectedEndYear = undefined;
+      this.selectedEndMonth = undefined;
+    } else {
+      this.selectedEndYear = endyear;
       this.misurazioneService.getMonthOfYears(endyear).subscribe(res => {
         this.endMonths = [];
         this.selectedEndMonth = undefined;
@@ -372,30 +429,129 @@ export class HomeComponent implements OnInit {
            }
         }
       })
+    }
   }
 
   onChangeEndMonth($event, endmonth) {
-    this.selectedEndMonth = endmonth;
+    if(endmonth == 'default') {
+      this.selectedEndMonth = undefined;
+    } else {
+      this.selectedEndMonth = endmonth;
+    }
   }
 
   ////////////////////////////////////////////////
 
 
-  
+  //////////////////////////////// GIORNO
 
-  
-
-
-
-  onChangeStartDay($event, startday) {
-    this.selectedStartDay = startday;
+  onChangeStartYearOfDay($event, startyear) {
+    if(startyear == 'default') {
+      this.startMonths = [];
+      this.startDays = [];
+      this.endYears = [];
+      this.endMonths = [];
+      this.endDays = [];
+      this.selectedStartYear = undefined;
+      this.selectedStartMonth = undefined;
+      this.selectedStartDay = undefined;
+      this.selectedEndYear = undefined;
+      this.selectedEndMonth = undefined;
+      this.selectedEndDay = undefined;
+    } else {
+      this.selectedStartYear = startyear;
+      this.misurazioneService.getMonthOfYears(startyear).subscribe(res => {
+        this.startMonths = [];
+        this.startDays = [];
+        this.endYears = [];
+        this.endMonths = [];
+        this.endDays = [];
+        this.selectedStartMonth = undefined;
+        this.selectedStartDay = undefined;
+        this.selectedEndYear = undefined;
+        this.selectedEndMonth = undefined;
+        this.selectedEndDay = undefined;
+        for(let m of res) {
+           this.month = {
+              nome: this.getNameOfMonth(m.mese),
+              numero: m.mese
+           }
+           this.startMonths.push(this.month)
+        }
+      })
+    }
   }
 
-  
+  onChangeStartMonthOfDay($event, startmonth) {
+    if(startmonth == 'default') {
+      this.startDays = [];
+      this.endYears = [];
+      this.endMonths = [];
+      this.endDays = [];
+      this.selectedStartMonth = undefined;
+      this.selectedStartDay = undefined;
+      this.selectedEndYear = undefined;
+      this.selectedEndMonth = undefined;
+      this.selectedEndDay = undefined;
+    } else {
+      this.selectedStartMonth = startmonth;
+      this.misurazioneService.getDayOfMonth(this.selectedStartYear, startmonth).subscribe(res => {
+        this.startDays = [];
+        this.endYears = [];
+        this.endMonths = [];
+        this.endDays = [];
+        this.selectedStartDay = undefined;
+        this.selectedEndYear = undefined;
+        this.selectedEndMonth = undefined;
+        this.selectedEndDay = undefined;
+        for(let d of res) {
+          this.startDays.push(d.giorno)
+        }
+      })
+    }
+  }
+
+  onChangeStartDayOfDay($event, startday) {
+    if(startday == 'default') {
+      this.endYears = [];
+      this.endMonths = [];
+      this.endDays = [];
+      this.selectedStartDay = undefined;
+      this.selectedEndYear = undefined;
+      this.selectedEndMonth = undefined;
+      this.selectedEndDay = undefined;
+    } else {
+      this.selectedStartDay = startday;
+      this.misurazioneService.getYears().subscribe(res => {
+        this.endYears = [];
+        this.endMonths = [];
+        this.endDays = [];
+        this.selectedEndYear = undefined;
+        this.selectedEndMonth = undefined;
+        this.selectedEndDay = undefined;
+        for(let y of res) {
+          if(y.anno >= this.selectedStartYear) {
+            this.endYears.push(y)
+          }
+        }
+      })
+    } 
+  }
 
   onChangeEndYearOfDay($event, endyear) {
-    this.selectedEndYear = endyear;
+    if(endyear == 'default') {
+      this.endMonths = [];
+      this.endDays = [];
+      this.selectedEndYear = undefined;
+      this.selectedEndMonth = undefined;
+      this.selectedEndDay = undefined;
+    } else {
+      this.selectedEndYear = endyear;
       this.misurazioneService.getMonthOfYears(endyear).subscribe(res => {
+        this.endMonths = [];
+        this.endDays = [];
+        this.selectedEndMonth = undefined;
+        this.selectedEndDay = undefined;
         for(let m of res) {
            this.month = {
               nome: this.getNameOfMonth(m.mese),
@@ -406,21 +562,19 @@ export class HomeComponent implements OnInit {
            }
         }
       })
-  }
-
-  onChangeStartMonthOfDay($event, startmonth) {
-    this.selectedStartMonth = startmonth;
-      this.misurazioneService.getDayOfMonth(this.selectedStartYear, startmonth).subscribe(res => {
-        for(let d of res) {
-          this.startDays.push(d.giorno)
-        }
-      })
+    }
   }
 
   onChangeEndMonthOfDay($event, endmonth) {
-    this.selectedEndMonth = endmonth;
-    this.endDays = [];
+    if(endmonth == 'default') {
+      this.endDays = [];
+      this.selectedEndMonth = undefined;
+      this.selectedEndDay = undefined;
+    } else {
+      this.selectedEndMonth = endmonth;
       this.misurazioneService.getDayOfMonth(this.selectedEndYear, endmonth).subscribe(res => {
+        this.endDays = [];
+        this.selectedEndDay = undefined;
         for(let d of res) {
           if(this.selectedStartYear == this.selectedEndYear) {
             if(this.selectedStartMonth == this.selectedEndMonth) {
@@ -435,7 +589,264 @@ export class HomeComponent implements OnInit {
           }
         }
       })
+    }
   }
+
+  onChangeEndDayOfDay($event, endday) {
+    if(endday == 'default') {
+      this.selectedEndDay = undefined;
+    } else {
+      this.selectedEndDay = endday;
+    }
+  }
+
+  ////////////////////////////////////////////////
+
+
+  //////////////////////////////// GIORNO
+
+  onChangeStartYearOfHour($event, startyear) {
+    if(startyear == 'default') {
+      this.startMonths = [];
+      this.startDays = [];
+      this.startHours = [];
+      this.endYears = [];
+      this.endMonths = [];
+      this.endDays = [];
+      this.endHours = [];
+      this.selectedStartYear = undefined;
+      this.selectedStartMonth = undefined;
+      this.selectedStartDay = undefined;
+      this.selectedStartHour = undefined;
+      this.selectedEndYear = undefined;
+      this.selectedEndMonth = undefined;
+      this.selectedEndDay = undefined;
+      this.selectedEndHour = undefined;
+    } else {
+      this.selectedStartYear = startyear;
+      this.misurazioneService.getMonthOfYears(startyear).subscribe(res => {
+        this.startMonths = [];
+        this.startDays = [];
+        this.startHours = [];
+        this.endYears = [];
+        this.endMonths = [];
+        this.endDays = [];
+        this.endHours = [];
+        this.selectedStartMonth = undefined;
+        this.selectedStartDay = undefined;
+        this.selectedStartHour = undefined;
+        this.selectedEndYear = undefined;
+        this.selectedEndMonth = undefined;
+        this.selectedEndDay = undefined;
+        this.selectedEndHour = undefined;
+        for(let m of res) {
+           this.month = {
+              nome: this.getNameOfMonth(m.mese),
+              numero: m.mese
+           }
+           this.startMonths.push(this.month)
+        }
+      })
+    }
+  }
+
+  onChangeStartMonthOfHour($event, startmonth) {
+    if(startmonth == 'default') {
+      this.startDays = [];
+      this.startHours = [];
+      this.endYears = [];
+      this.endMonths = [];
+      this.endDays = [];
+      this.endHours = [];
+      this.selectedStartMonth = undefined;
+      this.selectedStartDay = undefined;
+      this.selectedStartHour = undefined;
+      this.selectedEndYear = undefined;
+      this.selectedEndMonth = undefined;
+      this.selectedEndDay = undefined;
+      this.selectedEndHour = undefined;
+    } else {
+      this.selectedStartMonth = startmonth;
+      this.misurazioneService.getDayOfMonth(this.selectedStartYear, startmonth).subscribe(res => {
+        this.startDays = [];
+        this.startHours = [];
+        this.endYears = [];
+        this.endMonths = [];
+        this.endDays = [];
+        this.endHours = [];
+        this.selectedStartDay = undefined;
+        this.selectedStartHour = undefined;
+        this.selectedEndYear = undefined;
+        this.selectedEndMonth = undefined;
+        this.selectedEndDay = undefined;
+        this.selectedEndHour = undefined;
+        for(let d of res) {
+          this.startDays.push(d.giorno)
+        }
+      })
+    }
+  }
+
+  onChangeStartDayOfHour($event, startday) {
+    if(startday == 'default') {
+      this.startHours = [];
+      this.endYears = [];
+      this.endMonths = [];
+      this.endDays = [];
+      this.endHours = [];
+      this.selectedStartDay = undefined;
+      this.selectedStartHour = undefined;
+      this.selectedEndYear = undefined;
+      this.selectedEndMonth = undefined;
+      this.selectedEndDay = undefined;
+      this.selectedEndHour = undefined;
+    } else {
+      this.selectedStartDay = startday;
+      this.misurazioneService.getHourOfDay(this.selectedStartYear, this.selectedStartMonth, this.selectedStartDay).subscribe(res => {
+        this.startHours = [];
+        this.endYears = [];
+        this.endMonths = [];
+        this.endDays = [];
+        this.endHours = [];
+        this.selectedStartHour = undefined;
+        this.selectedEndYear = undefined;
+        this.selectedEndMonth = undefined;
+        this.selectedEndDay = undefined;
+        this.selectedEndHour = undefined;
+        for(let h of res) {
+          this.startHours.push(h.ora.substring(0, h.ora.length-3))
+        }
+      })
+    } 
+  }
+
+  onChangeStartHour($event, starthour) {
+    if(starthour == 'default') {
+      this.endYears = [];
+      this.endMonths = [];
+      this.endDays = [];
+      this.endHours = [];
+      this.selectedStartHour = undefined;
+      this.selectedEndYear = undefined;
+      this.selectedEndMonth = undefined;
+      this.selectedEndDay = undefined;
+      this.selectedEndHour = undefined;
+    } else {
+      this.selectedStartHour = starthour + ':00'
+      this.misurazioneService.getYears().subscribe(res => {
+        this.endYears = [];
+        this.endMonths = [];
+        this.endDays = [];
+        this.endHours = [];
+        this.selectedEndYear = undefined;
+        this.selectedEndMonth = undefined;
+        this.selectedEndDay = undefined;
+        this.selectedEndHour = undefined;
+        for(let y of res) {
+          if(y.anno >= this.selectedStartYear) {
+            this.endYears.push(y)
+          }
+        }
+      })
+    }
+  }
+
+  onChangeEndYearOfHour($event, endyear) {
+    if(endyear == 'default') {
+      this.endMonths = [];
+      this.endDays = [];
+      this.endHours = [];
+      this.selectedEndYear = undefined;
+      this.selectedEndMonth = undefined;
+      this.selectedEndDay = undefined;
+      this.selectedEndHour = undefined;
+    } else {
+      this.selectedEndYear = endyear;
+      this.misurazioneService.getMonthOfYears(endyear).subscribe(res => {
+        console.log(res)
+        this.endMonths = [];
+        this.endDays = [];
+        this.endHours = [];
+        this.selectedEndMonth = undefined;
+        this.selectedEndDay = undefined;
+        this.selectedEndHour = undefined;
+        for(let m of res) {
+           this.month = {
+              nome: this.getNameOfMonth(m.mese),
+              numero: m.mese
+           }
+           if((this.selectedEndYear == this.selectedStartYear && this.selectedStartMonth <= this.month.numero) ||
+                  this.selectedEndYear > this.selectedStartYear) {
+             this.endMonths.push(this.month)
+           }
+        }
+      })
+    }
+  }
+
+  onChangeEndMonthOfHour($event, endmonth) {
+    if(endmonth == 'default') {
+      this.endDays = [];
+      this.endHours = [];
+      this.selectedEndMonth = undefined;
+      this.selectedEndDay = undefined;
+      this.selectedEndHour = undefined;
+    } else {
+      this.selectedEndMonth = endmonth;
+      this.misurazioneService.getDayOfMonth(this.selectedEndYear, endmonth).subscribe(res => {
+        this.endDays = [];
+        this.endHours = [];
+        this.selectedEndDay = undefined;
+        this.selectedEndHour = undefined;
+        for(let d of res) {
+          if(this.selectedStartYear == this.selectedEndYear) {
+            if(this.selectedStartMonth == this.selectedEndMonth) {
+              if(this.selectedStartDay <= d.giorno) {
+                this.endDays.push(d.giorno)
+              }
+            } else if(this.selectedStartMonth < this.selectedEndMonth) {
+              this.endDays.push(d.giorno)
+            }
+          } else if(this.selectedStartYear < this.selectedEndYear) {
+            this.endDays.push(d.giorno)
+          }
+        }
+      })
+    }
+  }
+
+  onChangeEndDayOfHour($event, endday) {
+    if(endday == 'default') {
+      this.endHours = [];
+      this.selectedEndDay = undefined;
+      this.selectedEndHour = undefined;
+    } else {
+      this.selectedEndDay = endday;
+      this.misurazioneService.getHourOfDay(this.selectedStartYear, this.selectedStartMonth, this.selectedStartDay).subscribe(res => {
+        this.endHours = [];
+        this.selectedEndHour = undefined;
+        for(let h of res) {
+          if(this.selectedStartHour.substring(0, this.selectedStartHour.length-6) < h.ora.substring(0, h.ora.length-6)) {
+            this.endHours.push(h.ora.substring(0, h.ora.length-3))
+          }
+        }
+      })
+    } 
+  }
+
+  onChangeEndHour($event, endhour) {
+    if(endhour == 'default') {
+      this.selectedEndHour = undefined;
+    } else {
+      this.selectedEndHour = endhour + ':00'
+    }
+  }
+
+  ////////////////////////////////////////////////
+
+  
+
+  
 
   getNameOfMonth(value) {
     if(value == 1) {

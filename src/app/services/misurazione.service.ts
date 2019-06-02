@@ -52,6 +52,10 @@ export class MisurazioneService {
     return this.http.get<any[]>(this.misurazioneUrl + '/getdayofmonth/year=' + year + '&month=' + month);
   }
 
+  getHourOfDay(year: String, month: Number, day: Number): Observable<any[]>{
+    return this.http.get<any[]>(this.misurazioneUrl + '/gethourofday/year=' + year + '&month=' + month + '&day=' + day);
+  }
+
   saveMisurazione(misurazione: Misurazione): Observable<Misurazione>{
     return this.http.post<Misurazione>(this.misurazioneUrl, misurazione, {headers});
   }

@@ -81,7 +81,7 @@
           </div>
           <div *ngIf="selectedVariability == 'giorno'">
               Anno:
-              <select class="custom-select mr-sm-2" #startyear (change)="onChangeStartYearOfMonth($event, startyear.value)">
+              <select class="custom-select mr-sm-2" #startyear (change)="onChangeStartYearOfDay($event, startyear.value)">
                   <option value="default">Seleziona</option>
                   <option *ngFor="let y of startYears" value="{{ y.anno }}">{{ y.anno }}</option>
               </select>
@@ -91,7 +91,7 @@
                   <option *ngFor="let m of startMonths" value="{{ m.numero }}">{{ m.nome }}</option>
               </select>
               Giorno
-              <select class="custom-select mr-sm-2" #startday (change)="onChangeStartDay($event, startday.value)">
+              <select class="custom-select mr-sm-2" #startday (change)="onChangeStartDayOfDay($event, startday.value)">
                   <option value="default">Seleziona</option>
                   <option *ngFor="let d of startDays" value="{{ d }}">{{ d }}</option>
               </select>
@@ -106,9 +106,51 @@
                   <option *ngFor="let m of endMonths" value="{{ m.numero }}">{{ m.nome }}</option>
               </select>
               Giorno
-              <select class="custom-select mr-sm-2" #endday (change)="onChangeEndDay($event, endday.value)">
+              <select class="custom-select mr-sm-2" #endday (change)="onChangeEndDayOfDay($event, endday.value)">
                   <option value="default">Seleziona</option>
                   <option *ngFor="let d of endDays" value="{{ d }}">{{ d }}</option>
+              </select>
+          </div>
+          <div *ngIf="selectedVariability == 'ora'">
+              Anno:
+              <select class="custom-select mr-sm-2" #startyear (change)="onChangeStartYearOfHour($event, startyear.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let y of startYears" value="{{ y.anno }}">{{ y.anno }}</option>
+              </select>
+              Mese:
+              <select class="custom-select mr-sm-2" #startmonth (change)="onChangeStartMonthOfHour($event, startmonth.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let m of startMonths" value="{{ m.numero }}">{{ m.nome }}</option>
+              </select>
+              Giorno
+              <select class="custom-select mr-sm-2" #startday (change)="onChangeStartDayOfHour($event, startday.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let d of startDays" value="{{ d }}">{{ d }}</option>
+              </select>
+              Ora
+              <select class="custom-select mr-sm-2" #starthour (change)="onChangeStartHour($event, starthour.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let h of startHours" value="{{ h }}">{{ h }}</option>
+              </select>
+              Anno:
+              <select class="custom-select mr-sm-2" #endyear (change)="onChangeEndYearOfHour($event, endyear.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let y of endYears" value="{{ y.anno }}">{{ y.anno }}</option>
+              </select>
+              Mese:
+              <select class="custom-select mr-sm-2" #endmonth (change)="onChangeEndMonthOfHour($event, endmonth.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let m of endMonths" value="{{ m.numero }}">{{ m.nome }}</option>
+              </select>
+              Giorno
+              <select class="custom-select mr-sm-2" #endday (change)="onChangeEndDayOfHour($event, endday.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let d of endDays" value="{{ d }}">{{ d }}</option>
+              </select>
+              Ora
+              <select class="custom-select mr-sm-2" #endhour (change)="onChangeEndHour($event, endhour.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let h of endHours" value="{{ h }}">{{ h }}</option>
               </select>
           </div>
         </div>
