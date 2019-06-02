@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit {
     //self=this
 
     //this.misurazioneService.getMedia().subscribe(res => {
-      this.details = false;
+      //this.details = false;
       this.layer = new ol.source.OSM()
       //this.data = new ol.source.Vector();
       //console.log(res)
@@ -226,7 +226,7 @@ export class HomeComponent implements OnInit {
             }
           });
         }
-        this.details = false;
+        //this.details = false;
         this.searchResults = res;
         this.searchAddress = address;
       })
@@ -271,7 +271,7 @@ export class HomeComponent implements OnInit {
     });
   
     this.map.addLayer(vector)
-    this.details = true;  
+   // this.details = true;  
     this.result={
       display_name: display_name,
       lat: lat,
@@ -279,9 +279,9 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  back(){
+  /*back(){
     this.details = false;
-  }
+  }*/
 
   onChange($event, variability) {
     if(variability == 'default') {
