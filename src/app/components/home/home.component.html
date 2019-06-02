@@ -35,8 +35,87 @@
         </div>
       </div>
       <div class="col-md-9" style="padding-bottom: 0;  padding-right: 0.3%;">
-        <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 5px 5px 5px #aaaaaa; padding: 0; margin-right: 0" >
-          <div id="map" class="map"></div>
+        <div class="row">
+          <div>
+            <select class="custom-select mr-sm-2" #variability (change)="onChange($event, variability.value)">
+              <option value="default">Seleziona</option>
+              <option value="anno">Anno</option>
+              <option value="mese">Mese</option>
+              <option value="giorno">Giorno</option>
+              <option value="ora">Ora</option>
+            </select>
+          </div>
+          <div *ngIf="selectedVariability == 'anno'">
+              Da:
+              <select class="custom-select mr-sm-2" #startyear (change)="onChangeStartYear($event, startyear.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let y of startYears" value="{{ y.anno }}">{{ y.anno }}</option>
+                </select>
+              A:
+              <select class="custom-select mr-sm-2" #endyear (change)="onChangeEndYear($event, endyear.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let y of endYears" value="{{ y.anno }}">{{ y.anno }}</option>
+                </select>
+          </div>
+          <div *ngIf="selectedVariability == 'mese'">
+              Anno:
+              <select class="custom-select mr-sm-2" #startyear (change)="onChangeStartYearOfMonth($event, startyear.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let y of startYears" value="{{ y.anno }}">{{ y.anno }}</option>
+              </select>
+              Mese:
+              <select class="custom-select mr-sm-2" #startmonth (change)="onChangeStartMonth($event, startmonth.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let m of startMonths" value="{{ m.numero }}">{{ m.nome }}</option>
+              </select>
+              Anno:
+              <select class="custom-select mr-sm-2" #endyear (change)="onChangeEndYearOfMonth($event, endyear.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let y of endYears" value="{{ y.anno }}">{{ y.anno }}</option>
+              </select>
+              Mese:
+              <select class="custom-select mr-sm-2" #endmonth (change)="onChangeEndMonth($event, endmonth.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let m of endMonths" value="{{ m.numero }}">{{ m.nome }}</option>
+              </select>
+          </div>
+          <div *ngIf="selectedVariability == 'giorno'">
+              Anno:
+              <select class="custom-select mr-sm-2" #startyear (change)="onChangeStartYearOfMonth($event, startyear.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let y of startYears" value="{{ y.anno }}">{{ y.anno }}</option>
+              </select>
+              Mese:
+              <select class="custom-select mr-sm-2" #startmonth (change)="onChangeStartMonthOfDay($event, startmonth.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let m of startMonths" value="{{ m.numero }}">{{ m.nome }}</option>
+              </select>
+              Giorno
+              <select class="custom-select mr-sm-2" #startday (change)="onChangeStartDay($event, startday.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let d of startDays" value="{{ d }}">{{ d }}</option>
+              </select>
+              Anno:
+              <select class="custom-select mr-sm-2" #endyear (change)="onChangeEndYearOfDay($event, endyear.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let y of endYears" value="{{ y.anno }}">{{ y.anno }}</option>
+              </select>
+              Mese:
+              <select class="custom-select mr-sm-2" #endmonth (change)="onChangeEndMonthOfDay($event, endmonth.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let m of endMonths" value="{{ m.numero }}">{{ m.nome }}</option>
+              </select>
+              Giorno
+              <select class="custom-select mr-sm-2" #endday (change)="onChangeEndDay($event, endday.value)">
+                  <option value="default">Seleziona</option>
+                  <option *ngFor="let d of endDays" value="{{ d }}">{{ d }}</option>
+              </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 5px 5px 5px #aaaaaa; padding: 0; margin-right: 0" >
+            <div id="map" class="map"></div>
+          </div>
         </div>
       </div>
     </div>

@@ -35,8 +35,21 @@ export class MisurazioneService {
     return this.http.get<Misurazione[]>(this.misurazioneUrl);
   }
 
-  getMedia(): Observable<any[]>{
-    return this.http.get<any[]>(this.misurazioneUrl + '/media');
+  getMedia(precision: Number, lat1: Number, lat2: Number,long1: Number,long2: Number): Observable<any[]>{
+    return this.http.get<any[]>(this.misurazioneUrl + '/media/zoom=' + precision + '&lat1=' + lat1 +
+                                '&lat2=' + lat2 + '&long1=' + long1 + '&long2=' + long2);
+  }
+
+  getYears(): Observable<any[]>{
+    return this.http.get<any[]>(this.misurazioneUrl + '/getyears');
+  }
+
+  getMonthOfYears(year: String): Observable<any[]>{
+    return this.http.get<any[]>(this.misurazioneUrl + '/getmonthofyear/' + year);
+  }
+
+  getDayOfMonth(year: String, month: String): Observable<any[]>{
+    return this.http.get<any[]>(this.misurazioneUrl + '/getdayofmonth/year=' + year + '&month=' + month);
   }
 
   saveMisurazione(misurazione: Misurazione): Observable<Misurazione>{

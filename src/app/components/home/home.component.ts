@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { OsmService } from 'src/app/services/osm.service';
 import { MisurazioneService } from 'src/app/services/misurazione.service';
 import * as d3 from 'd3'
+import { Mese } from 'src/app/models/Mese';
 
 declare var ol: any;
-declare var self: any;
 
 @Component({
   selector: 'app-home',
@@ -33,6 +33,22 @@ export class HomeComponent implements OnInit {
   lat2: Number;
   heatmaplayer: any;
   opt: boolean = false;
+  radiusValue: Number;
+  blurValue: Number;
+  selectedVariability: String = '';
+  startYears: String[] = [];
+  endYears: String[] = [];
+  selectedStartYear: String;
+  selectedEndYear: String;
+  startMonths: Mese[] = [];
+  endMonths: Mese[] = [];
+  month: Mese;
+  selectedStartMonth: Number;
+  selectedEndMonth: Number;
+  startDays: Number[] = [];
+  endDays: Number[] = [];
+  selectedStartDay: Number;
+  selectedEndDay: Number;
 
   constructor(private osmService: OsmService,
               private misurazioneService: MisurazioneService) { }
@@ -134,54 +150,31 @@ export class HomeComponent implements OnInit {
   //});
   }
 
-  onMoveEnd(evt) {
-    this.currentZoom = evt.map.getView().getZoom();
-    console.log(this.currentZoom)
-    var glbox = evt.map.getView().calculateExtent(evt.map.getSize()); // doesn't look as expected.
-    var box = ol.proj.transformExtent(glbox,'EPSG:3857','EPSG:4326');
-    this.long1 = box[0];
-    this.lat1 = box[3];
-    this.lat2 = box[1];
-    this.long2 = box[2];
-    console.log('x1,y1 ' + this.long1 + ',' + this.lat1)
-    console.log('x2,y1 ' + this.long2 + ',' + this.lat1)
-    console.log('x1,y2 ' + this.long1 + ',' + this.lat2)
-    console.log('x2,y2 '  + this.long2 + ',' + this.lat2)
-    /*if(!this.opt) {
-      this.data = new ol.source.Vector();
-      var pointFeature = new ol.Feature({
-        geometry: new ol.geom.Point(ol.proj.fromLonLat([18.272022,40.083916])),
-        weight: 1
-      });
-      this.data.addFeature(pointFeature);
-      this.heatmaplayer = new ol.layer.Heatmap({
-        source: this.data,
-        opacity: 0.6,
-        radius: 40
-     })
-     evt.map.addLayer(this.heatmaplayer)
-     this.opt = true
-    } else {
-      evt.map.removeLayer(this.heatmaplayer)
-      this.data = new ol.source.Vector();
-    var pointFeature = new ol.Feature({
-      geometry: new ol.geom.Point(ol.proj.fromLonLat([17.893159,40.623920])),
-      weight: 1
-    });
-    this.data.addFeature(pointFeature);
-    this.heatmaplayer = new ol.layer.Heatmap({
-      source: this.data,
-      opacity: 0.6,
-      radius: 40
-   })
-   evt.map.addLayer(this.heatmaplayer)
-    }*/
-    //self.updateLayer(evt);
-    
+  switchZoom(zoom) {
+    if(2 <= zoom && zoom <= 3) {
+      return 1;
+    } else if(3 < zoom && zoom <= 5) {
+      return 2;
+    } else if(5 < zoom && zoom <= 8) {
+      return 3;
+    } else if(8 < zoom && zoom <= 19) {
+      return 4;
+    } 
   }
 
   updateLayer(evt) {
-    this.misurazioneService.getMedia().subscribe(res => {
+    let precision = this.switchZoom(this.currentZoom)
+    //y2 <= lat <= y1
+    //x1 <= long <= x2
+    //zoom -> endpoint diversi
+        //zoom varia da 2 a 19
+        //4 livelli zoom:
+                        //da 2 a 6 zoom 1
+                        //da 7 a 10 zoom 2
+                        //da 11 a 14 zoom 3
+                        //da 15 a 19 zoom 4
+
+    this.misurazioneService.getMedia(precision, this.lat1, this.lat2, this.long1, this.long2).subscribe(res => {
       evt.map.removeLayer(this.heatmaplayer)
       this.data = new ol.source.Vector();
       for(let d of res) {
@@ -192,9 +185,18 @@ export class HomeComponent implements OnInit {
         this.data.addFeature(pointFeature);
       }   
 
+      if(precision <= 2) {
+        this.radiusValue = 40
+        this.blurValue = 10
+      } else {
+        this.radiusValue = 15
+        this.blurValue = 30
+      }
+
       this.heatmaplayer = new ol.layer.Heatmap({
         source: this.data,
-        radius: 12
+        radius: this.radiusValue,
+        blur: this.blurValue
      })
      evt.map.addLayer(this.heatmaplayer)
     })
@@ -271,6 +273,196 @@ export class HomeComponent implements OnInit {
 
   back(){
     this.details = false;
+  }
+
+  onChange($event, variability) {
+    this.selectedVariability = variability;
+    if(this.selectedVariability == 'anno') {
+      this.misurazioneService.getYears().subscribe(res => {
+        this.startYears = res;
+      })
+    } else if(this.selectedVariability == 'mese') {
+      this.misurazioneService.getYears().subscribe(res => {
+        this.startYears = res;
+      })
+    } else if(this.selectedVariability == 'giorno') {
+      this.misurazioneService.getYears().subscribe(res => {
+        this.startYears = res;
+      })
+    } else if(this.selectedVariability == 'ora') {
+
+    }
+  }
+
+  //////////////////////////////// ANNO
+
+  onChangeStartYear($event, startyear) {
+    if(startyear == 'default') {
+      
+    } else {
+      this.selectedStartYear = startyear;
+        this.misurazioneService.getYears().subscribe(res => {
+          this.endYears = [];
+          this.selectedEndYear = undefined;
+          for(let y of res) {
+            if(y.anno > this.selectedStartYear) {
+              this.endYears.push(y)
+            }
+          }
+        })
+    }
+  }
+
+  onChangeEndYear($event, endyear) {
+    this.selectedEndYear = endyear;
+  }
+
+  ////////////////////////////////////////////////
+
+
+  //////////////////////////////// MESE
+
+  onChangeStartYearOfMonth($event, startyear) {
+    this.selectedStartYear = startyear;
+      this.misurazioneService.getMonthOfYears(startyear).subscribe(res => {
+        this.startMonths = [];
+        this.selectedStartMonth = undefined;
+        this.endYears = [];
+        this.selectedEndYear = undefined;
+        this.endMonths = [];
+        this.selectedEndMonth = undefined;
+        for(let m of res) {
+           this.month = {
+              nome: this.getNameOfMonth(m.mese),
+              numero: m.mese
+           }
+           this.startMonths.push(this.month)
+        }
+      })
+  }
+
+  onChangeStartMonth($event, startmonth) {
+    this.selectedStartMonth = startmonth;
+    this.misurazioneService.getYears().subscribe(res => {
+      this.endYears = [];
+      this.selectedEndYear = undefined;
+      this.endMonths = [];
+      this.selectedEndMonth = undefined;
+      for(let y of res) {
+        if(y.anno >= this.selectedStartYear) {
+          this.endYears.push(y)
+        }
+      }
+    })
+  }
+
+  onChangeEndYearOfMonth($event, endyear) {
+    this.selectedEndYear = endyear;
+      this.misurazioneService.getMonthOfYears(endyear).subscribe(res => {
+        this.endMonths = [];
+        this.selectedEndMonth = undefined;
+        for(let m of res) {
+           this.month = {
+              nome: this.getNameOfMonth(m.mese),
+              numero: m.mese
+           }
+           if((this.selectedEndYear == this.selectedStartYear && this.selectedStartMonth < this.month.numero) ||
+                  this.selectedEndYear > this.selectedStartYear) {
+             this.endMonths.push(this.month)
+           }
+        }
+      })
+  }
+
+  onChangeEndMonth($event, endmonth) {
+    this.selectedEndMonth = endmonth;
+  }
+
+  ////////////////////////////////////////////////
+
+
+  
+
+  
+
+
+
+  onChangeStartDay($event, startday) {
+    this.selectedStartDay = startday;
+  }
+
+  
+
+  onChangeEndYearOfDay($event, endyear) {
+    this.selectedEndYear = endyear;
+      this.misurazioneService.getMonthOfYears(endyear).subscribe(res => {
+        for(let m of res) {
+           this.month = {
+              nome: this.getNameOfMonth(m.mese),
+              numero: m.mese
+           }
+           if(this.selectedStartMonth <= this.month.numero) {
+             this.endMonths.push(this.month)
+           }
+        }
+      })
+  }
+
+  onChangeStartMonthOfDay($event, startmonth) {
+    this.selectedStartMonth = startmonth;
+      this.misurazioneService.getDayOfMonth(this.selectedStartYear, startmonth).subscribe(res => {
+        for(let d of res) {
+          this.startDays.push(d.giorno)
+        }
+      })
+  }
+
+  onChangeEndMonthOfDay($event, endmonth) {
+    this.selectedEndMonth = endmonth;
+    this.endDays = [];
+      this.misurazioneService.getDayOfMonth(this.selectedEndYear, endmonth).subscribe(res => {
+        for(let d of res) {
+          if(this.selectedStartYear == this.selectedEndYear) {
+            if(this.selectedStartMonth == this.selectedEndMonth) {
+              if(this.selectedStartDay < d.giorno) {
+                this.endDays.push(d.giorno)
+              }
+            } else if(this.selectedStartMonth < this.selectedEndMonth) {
+              this.endDays.push(d.giorno)
+            }
+          } else if(this.selectedStartYear < this.selectedEndYear) {
+            this.endDays.push(d.giorno)
+          }
+        }
+      })
+  }
+
+  getNameOfMonth(value) {
+    if(value == 1) {
+      return 'Gennaio';
+    } else if(value == 2) {
+      return 'Febbraio';
+    } else if(value == 3) {
+      return 'Marzo';
+    } else if(value == 4) {
+      return 'Aprile';
+    } else if(value == 5) {
+      return 'Maggio';
+    } else if(value == 6) {
+      return 'Giugno';
+    } else if(value == 7) {
+      return 'Luglio';
+    } else if(value == 8) {
+      return 'Agosto';
+    } else if(value == 9) {
+      return 'Settembre';
+    } else if(value == 10) {
+      return 'Ottobre';
+    }else if(value == 11) {
+      return 'Novembre';
+    } else if(value == 12) {
+      return 'Dicembre';
+    }
   }
 
   showPieChart() {
