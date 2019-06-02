@@ -144,18 +144,15 @@ export class HomeComponent implements OnInit {
   //this.map.on('moveend', this.onMoveEnd);
   this.map.on('moveend', evt => {
     this.currentZoom = evt.map.getView().getZoom();
-    console.log(this.currentZoom)
     var glbox = evt.map.getView().calculateExtent(evt.map.getSize()); // doesn't look as expected.
     var box = ol.proj.transformExtent(glbox,'EPSG:3857','EPSG:4326');
     this.long1 = box[0];
     this.lat1 = box[3];
     this.lat2 = box[1];
     this.long2 = box[2];
-    console.log('x1,y1 ' + this.long1 + ',' + this.lat1)
-    console.log('x2,y1 ' + this.long2 + ',' + this.lat1)
-    console.log('x1,y2 ' + this.long1 + ',' + this.lat2)
-    console.log('x2,y2 '  + this.long2 + ',' + this.lat2)
-    this.updateLayer(evt);
+    if(!this.animating) {
+      this.updateLayer(evt);
+    }
   });
   //});
   }
@@ -883,16 +880,16 @@ export class HomeComponent implements OnInit {
       if(this.selectedStartYear == undefined || this.selectedEndYear == undefined) {
         alert('Completa tutti i campi per iniziare l\'animazione')
       } else {
-        console.log(this.selectedStartYear)
-        console.log(this.selectedEndYear)
+        this.misurazioneService.getMediaAnno(this.currentPrecision, this.lat1, this.lat2,
+          this.long1, this.long2, this.selectedStartYear, this.selectedEndYear).subscribe(res => {
+            this.animateLayer(res);
+        })
       }
     } else if(this.selectedVariability == 'mese') {
       if(this.selectedStartYear == undefined || this.selectedEndYear == undefined ||
         this.selectedStartMonth == undefined || this.selectedEndMonth == undefined) {
         alert('Completa tutti i campi per iniziare l\'animazione')
       } else {
-        console.log(this.selectedStartYear + '-' + this.selectedStartMonth);
-        console.log(this.selectedEndYear + '-' + this.selectedEndMonth);
         this.misurazioneService.getMediaMese(this.currentPrecision, this.lat1, this.lat2,
           this.long1, this.long2, this.selectedStartYear + '-' + this.selectedStartMonth,
           this.selectedEndYear + '-' + this.selectedEndMonth).subscribe(res => {
@@ -905,8 +902,11 @@ export class HomeComponent implements OnInit {
         this.selectedStartDay == undefined || this.selectedEndDay == undefined) {
         alert('Completa tutti i campi per iniziare l\'animazione')
       } else {
-        console.log(this.selectedStartYear + '-' + this.selectedStartMonth + '-' + this.selectedStartDay);
-        console.log(this.selectedEndYear + '-' + this.selectedEndMonth + '-' + this.selectedEndDay);
+        this.misurazioneService.getMediaGiorno(this.currentPrecision, this.lat1, this.lat2, this.long1, this.long2,
+          this.selectedStartYear + '-' + this.selectedStartMonth + '-' + this.selectedStartDay,
+          this.selectedEndYear + '-' + this.selectedEndMonth + '-' + this.selectedEndDay).subscribe(res => {
+            this.animateLayer(res);
+        })
       }
     } else if(this.selectedVariability == 'ora') {
       if(this.selectedStartYear == undefined || this.selectedEndYear == undefined ||
@@ -915,8 +915,11 @@ export class HomeComponent implements OnInit {
         this.selectedStartHour == undefined || this.selectedEndHour == undefined) {
         alert('Completa tutti i campi per iniziare l\'animazione')
       } else {
-        console.log(this.selectedStartYear + '-' + this.selectedStartMonth + '-' + this.selectedStartDay + ' ' + this.selectedStartHour);
-        console.log(this.selectedEndYear + '-' + this.selectedEndMonth + '-' + this.selectedEndDay + ' ' + this.selectedEndHour);
+        this.misurazioneService.getMediaOra(this.currentPrecision, this.lat1, this.lat2, this.long1, this.long2,
+          this.selectedStartYear + '-' + this.selectedStartMonth + '-' + this.selectedStartDay + ' ' + this.selectedStartHour,
+          this.selectedEndYear + '-' + this.selectedEndMonth + '-' + this.selectedEndDay + ' ' + this.selectedEndHour).subscribe(res => {
+            this.animateLayer(res);
+        })
       }
     }
   }

@@ -40,6 +40,21 @@ export class MisurazioneService {
                                 '&lat2=' + lat2 + '&long1=' + long1 + '&long2=' + long2);
   }
 
+  getMediaAnno(precision: Number, lat1: Number, lat2: Number,long1: Number,long2: Number, start: String, end: String): Observable<any[]>{
+    return this.http.get<any[]>(this.misurazioneUrl + '/media/anno/from=' + start + '&to=' + end + '&zoom=' + precision + '&lat1=' + lat1 +
+                                '&lat2=' + lat2 + '&long1=' + long1 + '&long2=' + long2);
+  }
+
+  getMediaGiorno(precision: Number, lat1: Number, lat2: Number,long1: Number,long2: Number, start: String, end: String): Observable<any[]>{
+    return this.http.get<any[]>(this.misurazioneUrl + '/media/giorno/from=' + start + '&to=' + end + '&zoom=' + precision + '&lat1=' + lat1 +
+                                '&lat2=' + lat2 + '&long1=' + long1 + '&long2=' + long2);
+  }
+
+  getMediaOra(precision: Number, lat1: Number, lat2: Number,long1: Number,long2: Number, start: String, end: String): Observable<any[]>{
+    return this.http.get<any[]>(this.misurazioneUrl + '/media/ora/from=' + start + '&to=' + end + '&zoom=' + precision + '&lat1=' + lat1 +
+                                '&lat2=' + lat2 + '&long1=' + long1 + '&long2=' + long2);
+  }
+
   getMediaMese(precision: Number, lat1: Number, lat2: Number,long1: Number,long2: Number, start: String, end: String): Observable<any[]>{
     return this.http.get<any[]>(this.misurazioneUrl + '/media/mese/from=' + start + '&to=' + end + '&zoom=' + precision + '&lat1=' + lat1 +
                                 '&lat2=' + lat2 + '&long1=' + long1 + '&long2=' + long2);
