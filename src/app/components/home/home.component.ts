@@ -151,7 +151,7 @@ export class HomeComponent implements OnInit {
     this.lat2 = box[1];
     this.long2 = box[2];
     if(!this.animating) {
-      this.updateLayer(evt);
+      this.updateLayer(evt.map);
     }
   });
   //});
@@ -169,7 +169,7 @@ export class HomeComponent implements OnInit {
     } 
   }
 
-  updateLayer(evt) {
+  updateLayer(map) {
     let precision = this.switchZoom(this.currentZoom)
     this.currentPrecision = precision;
     //y2 <= lat <= y1
@@ -183,7 +183,7 @@ export class HomeComponent implements OnInit {
                         //da 15 a 19 zoom 4
 
     this.misurazioneService.getMedia(precision, this.lat1, this.lat2, this.long1, this.long2).subscribe(res => {
-      evt.map.removeLayer(this.heatmaplayer)
+      map.removeLayer(this.heatmaplayer)
       this.data = new ol.source.Vector();
       for(let d of res) {
         var pointFeature = new ol.Feature({
@@ -206,7 +206,7 @@ export class HomeComponent implements OnInit {
         radius: this.radiusValue,
         blur: this.blurValue
      })
-     evt.map.addLayer(this.heatmaplayer)
+     map.addLayer(this.heatmaplayer)
     })
   }
 
@@ -323,6 +323,9 @@ export class HomeComponent implements OnInit {
       this.misurazioneService.getYears().subscribe(res => {
         this.startYears = res;
       })
+    }
+    if(this.subscription!=undefined) {
+      this.stopAnimation()
     }
   }
 
@@ -825,11 +828,19 @@ export class HomeComponent implements OnInit {
       this.selectedEndHour = undefined;
     } else {
       this.selectedEndDay = endday;
-      this.misurazioneService.getHourOfDay(this.selectedStartYear, this.selectedStartMonth, this.selectedStartDay).subscribe(res => {
+      this.misurazioneService.getHourOfDay(this.selectedEndYear, this.selectedEndMonth, this.selectedEndDay).subscribe(res => {
         this.endHours = [];
         this.selectedEndHour = undefined;
         for(let h of res) {
-          if(this.selectedStartHour.substring(0, this.selectedStartHour.length-6) < h.ora.substring(0, h.ora.length-6)) {
+          if(this.selectedStartHour.length == 7) {
+            this.selectedStartHour = '0' + this.selectedStartHour
+          }
+          if(h.ora.length == 7) {
+            h.ora = '0' + h.ora
+          }
+          let dateStartString = this.selectedStartYear+'-'+this.selectedStartMonth+'-'+this.selectedStartDay+'T'+this.selectedStartHour;
+          let dateEndString = this.selectedEndYear+'-'+this.selectedEndMonth+'-'+this.selectedEndDay+'T'+h.ora;
+          if(new Date(dateStartString) < new Date(dateEndString)) {
             this.endHours.push(h.ora.substring(0, h.ora.length-3))
           }
         }
@@ -974,6 +985,7 @@ export class HomeComponent implements OnInit {
     this.subscription.unsubscribe();
     this.animating = false;
     this.label = "";
+    this.updateLayer(this.map)
   }
 
   showPieChart() {

@@ -5,7 +5,7 @@
       </div>
     </div>
   </div>
-  <div class="row" style="margin-top: 8.5rem; margin-left: 0.5%; margin-right: 0">
+  <div class="row" style="margin-top: 8.5rem; margin-left: 5%; margin-right: 5%">
       <div class="col-md-3" style="padding: 0;">
         <div class="card card-body mb-3 card1" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; height: 96%;" >
           <form>
@@ -34,7 +34,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-9" style="padding-bottom: 0;  padding-right: 0.3%; padding-left: 2%">
+      <div class="col-md-9" style="padding-bottom: 0;  padding-right: 2%; padding-left: 2%">
           <div class="row">
         <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 5px 5px 5px #aaaaaa; margin-right: 0" >
           <div class="row">
@@ -198,8 +198,19 @@
                 </div>
             </div>
             <div *ngIf="selectedVariability != undefined" class="col-md-2">
-              <button type="button" class="btn" (click)="startAnimation()" style="background-color: rgb(231, 167, 46)">Start</button>
-              <button *ngIf="animating" type="button" class="btn" (click)="stopAnimation()"  style="background-color: rgb(110, 110, 110); padding-left: 1%">Stop</button>
+              <div class="row">
+                <div class="col-md-6">
+                  <button type="button" class="btn" (click)="startAnimation()" style="background-color: rgb(231, 167, 46)">Start</button>
+                </div>
+                <div class="col-md-6">
+                  <button *ngIf="animating" type="button" class="btn" (click)="stopAnimation()"  style="background-color: rgb(110, 110, 110)">Stop</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12" style="text-align: right;">
+              <div *ngIf="animating">Stai visualizzando l'heatmap del {{ label }}</div>
             </div>
           </div>
         </div>
@@ -207,7 +218,6 @@
           <div class="row" style="padding-top: 0.1%">
             <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 5px 5px 5px #aaaaaa; padding: 0; margin-right: 0" >
               <div id="map" class="map"></div>
-              <div *ngIf="animating">{{ label }}</div>
             </div>
           </div>
     </div>
@@ -235,7 +245,7 @@
       </div>
     </div>
     </div>
-    <div class="row" style="margin-top: 1%; margin-left: 0.5%; margin-right: 0.5%">
+    <div class="row" style="margin-top: 1%; margin-left: 5%; margin-right: 5%">
       <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; height: 100%" >
         <h2>Come varia la potenza irradiata a Lecce durante la giornata?</h2>
         <div class="row">
@@ -252,7 +262,7 @@
         </div>
       </div>
     </div>
-    <div class="row" style="margin-top: 1%; margin-left: 0.5%; margin-right: 0.5%">
+    <div class="row" style="margin-top: 1%; margin-left: 5%; margin-right: 5%">
       <div class="card card-body mb-3" style="border-color: lightgrey; box-shadow: 10px 10px 5px #aaaaaa; height: 100%" >
         <h2>Qual è il gestore telefonico che inquina di più?</h2>
         <div class="row">
