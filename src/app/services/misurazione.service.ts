@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GlobalService } from './global.service';
 import { Observable } from 'rxjs';
-import { Misurazione } from '../models/Misurazione';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
-const headers = new HttpHeaders({'Content-Type' : 'application/json; charset=utf-8'});
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +12,8 @@ export class MisurazioneService {
 
   constructor(private http: HttpClient, public global: GlobalService) { }
 
-  d3test(): Observable<any>{
-    return this.http.get<any>('https://api.coindesk.com/v1/bpi/historical/close.json?start=2017-12-31&end=2018-04-01');
-  }
-
-  getEFMedium(): Observable<any[]>{
-    return this.http.get<any[]>(this.misurazioneUrl + '/efmedium');
+  getDBMedium(): Observable<any[]>{
+    return this.http.get<any[]>(this.misurazioneUrl + '/averageDB');
   }
 
   getCarrierMedium(): Observable<any[]>{
@@ -29,10 +22,6 @@ export class MisurazioneService {
 
   getDayChanges(): Observable<any[]>{
     return this.http.get<any[]>(this.misurazioneUrl + '/daychanges');
-  }
-
-  getAll(): Observable<Misurazione[]>{
-    return this.http.get<Misurazione[]>(this.misurazioneUrl);
   }
 
   getMedia(precision: Number, lat1: Number, lat2: Number,long1: Number,long2: Number): Observable<any[]>{
@@ -74,18 +63,6 @@ export class MisurazioneService {
 
   getHourOfDay(year: String, month: Number, day: Number): Observable<any[]>{
     return this.http.get<any[]>(this.misurazioneUrl + '/gethourofday/year=' + year + '&month=' + month + '&day=' + day);
-  }
-
-  saveMisurazione(misurazione: Misurazione): Observable<Misurazione>{
-    return this.http.post<Misurazione>(this.misurazioneUrl, misurazione, {headers});
-  }
-
-  updateMisurazione(misurazione: Misurazione): Observable<Misurazione>{
-    return this.http.put<Misurazione>(this.misurazioneUrl, misurazione, {headers});
-  }
-
-  delete(idmisurazione: Number): Observable<Misurazione>{
-    return this.http.delete<Misurazione>(this.misurazioneUrl + '/' + idmisurazione);
   }
 
 }

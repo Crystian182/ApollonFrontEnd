@@ -55,7 +55,7 @@ export class HomeComponent implements OnInit {
   selectedStartHour: String;
   selectedEndHour: String;
   currentPrecision: any;
-  intervallTimer: any = interval(5000);
+  intervallTimer: any = interval(3000);
   subscription: any;
   animating: boolean = false;
   label: String = "";
@@ -69,29 +69,28 @@ export class HomeComponent implements OnInit {
     this.showLineChart();
     this.showBarChart();
 
-    //self=this
-
-    //this.misurazioneService.getMedia().subscribe(res => {
-      //this.details = false;
-      this.layer = new ol.source.OSM()
-      //this.data = new ol.source.Vector();
-      //console.log(res)
-      /*for(let d of res) {
-        var pointFeature = new ol.Feature({
-          geometry: new ol.geom.Point(ol.proj.fromLonLat([d.longitudine, d.latitudine])),
-          weight: d.weight
-        });
-        this.data.addFeature(pointFeature);
-      }   
-
-      this.heatmaplayer = new ol.layer.Heatmap({
-        source: this.data,
-        opacity: 0.6,
-        radius: 12,
-        blur: 25
-     })*/
+    this.layer = new ol.source.OSM()
 
     var vectorLayer = new ol.layer.Vector({
+      name: 'firstvector',
+      source: new ol.source.Vector({
+        features: [new ol.Feature({
+          geometry: new ol.geom.Point(ol.proj.transform([(this.longitude), (this.latitude)], 'EPSG:4326', 'EPSG:3857')),
+          })]
+        }),
+      style: new ol.style.Style({
+        image: new ol.style.Icon({
+          opacity: 0.5,
+          anchor: [0.5, 0.5],
+          anchorXUnits: "fraction",
+          anchorYUnits: "fraction",
+          scale: 0.08,
+          src: "https://image.flaticon.com/icons/svg/33/33622.svg"
+          })
+      })
+    });
+
+     var vectorLayer = new ol.layer.Vector({
       name: 'firstvector',
       source: new ol.source.Vector({
         features: [new ol.Feature({
@@ -131,17 +130,7 @@ export class HomeComponent implements OnInit {
         maxZoom: 19
       })
     });
-    //console.log(this.map.getView().getZoom())
-    /*this.map.getView().on('propertychange', function(e) {
-      switch (e.key) {
-         case 'resolution':
-           console.log(e.oldValue);
-           break;
-      }
-   });*/
-   
-   //console.log(this.map.getView().getZoom());
-  //this.map.on('moveend', this.onMoveEnd);
+
   this.map.on('moveend', evt => {
     this.currentZoom = evt.map.getView().getZoom();
     var glbox = evt.map.getView().calculateExtent(evt.map.getSize()); // doesn't look as expected.
@@ -152,6 +141,11 @@ export class HomeComponent implements OnInit {
     this.long2 = box[2];
     if(!this.animating) {
       this.updateLayer(evt.map);
+    } else {
+      let precision = this.switchZoom(this.currentZoom)
+      this.currentPrecision = precision;
+      this.stopAnimationWithoutUpdateLayer();
+      this.startAnimation();
     }
   });
   //});
@@ -262,11 +256,9 @@ export class HomeComponent implements OnInit {
     layers.forEach( function (layer) {
       if(layer.get('name')==='firstvector'){
           layers.pop(layer);
-          console.log(layers)
       }
       if(layer.get('name')==='vector'){
         layers.pop(layer);
-        console.log(layers)
       }
     });
   
@@ -988,8 +980,14 @@ export class HomeComponent implements OnInit {
     this.updateLayer(this.map)
   }
 
+  stopAnimationWithoutUpdateLayer() {
+    this.subscription.unsubscribe();
+    this.animating = false;
+    this.label = "";
+  }
+
   showPieChart() {
-    this.misurazioneService.getEFMedium().subscribe(res => {
+    this.misurazioneService.getDBMedium().subscribe(res => {
       var data = res;
       this.efmedium = data;
   
@@ -1061,8 +1059,8 @@ export class HomeComponent implements OnInit {
     var arr = [];
     for (var i of data) {
         arr.push({
-            hour: d3.timeParse("%H")(i.hour), //date
-            value: +i.level //convert string to number
+          hour: d3.timeParse("%H")(i.hour), //date
+          value: +i.level //convert string to number
         });
     }
     return arr;

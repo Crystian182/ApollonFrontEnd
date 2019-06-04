@@ -11,15 +11,11 @@ import { NgbModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
-import { CrudComponent } from './components/crud/crud.component';
-import { ModalComponent } from './components/modal/modal.component';
 import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CrudComponent,
-    ModalComponent,
     HomeComponent
   ],
   imports: [
@@ -42,8 +38,6 @@ import { HomeComponent } from './components/home/home.component';
   ],
   providers: [Title],
   bootstrap: [AppComponent],
-  entryComponents: [
-    ModalComponent
-  ]
+  entryComponents: [ ]
 })
 export class AppModule { }
