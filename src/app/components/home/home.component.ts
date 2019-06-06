@@ -19,13 +19,10 @@ export class HomeComponent implements OnInit {
   latitude: number = 40.35481;
   longitude: number = 18.17244;
   searchResults: any[] = [];
-  heatmapData: any[] = [];
   data: any;
-  details: boolean;
   searchAddress: any;
   result: any;
   emptyresults: boolean = false;
-  sumelem: Number;
   efmedium: any[] = []
   currentZoom: Number = 8;
   long1: Number;
@@ -33,7 +30,6 @@ export class HomeComponent implements OnInit {
   lat1: Number;
   lat2: Number;
   heatmaplayer: any;
-  opt: boolean = false;
   radiusValue: Number;
   blurValue: Number;
   selectedVariability: String = undefined;
@@ -87,10 +83,10 @@ export class HomeComponent implements OnInit {
           scale: 0.08,
           src: "https://image.flaticon.com/icons/svg/33/33622.svg"
           })
-      })
-    });
+        })
+      });
 
-     var vectorLayer = new ol.layer.Vector({
+    var vectorLayer = new ol.layer.Vector({
       name: 'firstvector',
       source: new ol.source.Vector({
         features: [new ol.Feature({
@@ -120,7 +116,6 @@ export class HomeComponent implements OnInit {
         new ol.layer.Tile({
           source: this.layer
         }), 
-        //this.heatmaplayer,
         vectorLayer
       ],
       view: new ol.View({
@@ -131,24 +126,23 @@ export class HomeComponent implements OnInit {
       })
     });
 
-  this.map.on('moveend', evt => {
-    this.currentZoom = evt.map.getView().getZoom();
-    var glbox = evt.map.getView().calculateExtent(evt.map.getSize()); // doesn't look as expected.
-    var box = ol.proj.transformExtent(glbox,'EPSG:3857','EPSG:4326');
-    this.long1 = box[0];
-    this.lat1 = box[3];
-    this.lat2 = box[1];
-    this.long2 = box[2];
-    if(!this.animating) {
-      this.updateLayer(evt.map);
-    } else {
-      let precision = this.switchZoom(this.currentZoom)
-      this.currentPrecision = precision;
-      this.stopAnimationWithoutUpdateLayer();
-      this.startAnimation();
-    }
-  });
-  //});
+    this.map.on('moveend', evt => {
+      this.currentZoom = evt.map.getView().getZoom();
+      var glbox = evt.map.getView().calculateExtent(evt.map.getSize());
+      var box = ol.proj.transformExtent(glbox,'EPSG:3857','EPSG:4326');
+      this.long1 = box[0];
+      this.lat1 = box[3];
+      this.lat2 = box[1];
+      this.long2 = box[2];
+      if(!this.animating) {
+        this.updateLayer(evt.map);
+      } else {
+        let precision = this.switchZoom(this.currentZoom)
+        this.currentPrecision = precision;
+        this.stopAnimationWithoutUpdateLayer();
+        this.startAnimation();
+      }
+    });
   }
 
   switchZoom(zoom) {
@@ -166,15 +160,6 @@ export class HomeComponent implements OnInit {
   updateLayer(map) {
     let precision = this.switchZoom(this.currentZoom)
     this.currentPrecision = precision;
-    //y2 <= lat <= y1
-    //x1 <= long <= x2
-    //zoom -> endpoint diversi
-        //zoom varia da 2 a 19
-        //4 livelli zoom:
-                        //da 2 a 6 zoom 1
-                        //da 7 a 10 zoom 2
-                        //da 11 a 14 zoom 3
-                        //da 15 a 19 zoom 4
 
     this.misurazioneService.getMedia(precision, this.lat1, this.lat2, this.long1, this.long2).subscribe(res => {
       map.removeLayer(this.heatmaplayer)
@@ -220,7 +205,6 @@ export class HomeComponent implements OnInit {
             }
           });
         }
-        //this.details = false;
         this.searchResults = res;
         this.searchAddress = address;
       })
@@ -263,17 +247,12 @@ export class HomeComponent implements OnInit {
     });
   
     this.map.addLayer(vector)
-   // this.details = true;  
     this.result={
       display_name: display_name,
       lat: lat,
       lon: lon
     }
   }
-
-  /*back(){
-    this.details = false;
-  }*/
 
   onChange($event, variability) {
     if(variability == 'default') {
@@ -943,7 +922,6 @@ export class HomeComponent implements OnInit {
         i++;
       }
     });
-    //
   }
 
   updateAnimationLayer(data) {
